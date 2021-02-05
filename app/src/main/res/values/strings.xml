@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Ostah App</string>
+    <string name="login">Login</string>
+    <string name="home">Home</string>
+    <string name="orders">Orders</string>
+    <string name="history">History</string>
+    <string name="more">More</string>
+</resources>

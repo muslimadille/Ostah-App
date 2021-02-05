@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Ostah App</string>
+    <string name="home">الرئيسية</string>
+    <string name="login">دخول</string>
+    <string name="orders">الطلبات</string>
+    <string name="history">السابقة</string>
+    <string name="more">المزيد</string>
+</resources>
