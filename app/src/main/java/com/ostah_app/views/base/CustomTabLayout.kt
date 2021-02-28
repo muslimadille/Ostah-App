@@ -1,4 +1,4 @@
-package com.ostah_app.base
+package com.ostah_app.views.base
 
 
 
@@ -8,7 +8,7 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
-import com.ostah_app.R
+import  com.ostah_app.R
 
 class CustomTabLayout @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0

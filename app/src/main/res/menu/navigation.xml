@@ -11,10 +11,15 @@
         android:enabled="true"
         android:title="@string/orders" />
     <item
-        android:id="@+id/navigation_history"
+        android:id="@+id/navigation_previous"
         android:enabled="true"
         android:icon="@drawable/history"
         android:title="@string/history" />
+    <item
+        android:id="@+id/navigation_profile"
+        android:enabled="true"
+        android:icon="@drawable/person_ic"
+        android:title="@string/profile_title"/>
     <item
         android:id="@+id/navigation_extras"
         android:enabled="true"

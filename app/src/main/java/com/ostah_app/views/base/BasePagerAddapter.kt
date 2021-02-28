@@ -1,4 +1,5 @@
-package com.ostah_app.base
+package com.ostah_app.views.base
+
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity

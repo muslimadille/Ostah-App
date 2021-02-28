@@ -34,6 +34,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
             <RadioButton
+                android:id="@+id/user_btn"
                 android:layout_margin="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -41,6 +42,7 @@
                 android:textColor="@color/base"
                 android:text="مستخدم"/>
             <RadioButton
+                android:id="@+id/osta_btn"
                 android:layout_margin="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

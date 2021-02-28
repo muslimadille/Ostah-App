@@ -26,20 +26,19 @@ class ComplexPreferences @SuppressLint("CommitPrefEdits") constructor(context: C
 
     companion object {
         private var complexPreferences: ComplexPreferences? = null
-
         fun getComplexPreferences(context: Context,
                                   namePreferences: String, mode: Int): ComplexPreferences {
 
             if (complexPreferences == null) {
                 complexPreferences = ComplexPreferences(context,
-                    namePreferences, mode)
+                        namePreferences, mode)
             }
 
             complexPreferences.let { return it!! }
         }
     }
 
-   // fun isAppEnglish(): Boolean = getInteger(Q.SELECTED_LOCALE_PREF, Q.LOCALE_AR_INDEX) == Q.LOCALE_EN_INDEX
+    // fun isAppEnglish(): Boolean = getInteger(Q.SELECTED_LOCALE_PREF, Q.LOCALE_AR_INDEX) == Q.LOCALE_EN_INDEX
 
     fun putObject(key: String, `object`: Any?) {
         if (`object` == null) {

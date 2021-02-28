@@ -6,4 +6,13 @@
     <string name="orders">الطلبات</string>
     <string name="history">السابقة</string>
     <string name="more">المزيد</string>
+
+    <string name="no_internet">لا يوجد إتصال بشبكة الإنترنت</string>
+    <string name="exit">خروج</string>
+    <string name="dismiss">إخفاء</string>
+    <string name="profile_title">حسابي</string>
+    <string name="try_again">حاول مرة أخرى</string>
+    <string name="progress_txt">الرجاء الإنتظار</string>
+
+
 </resources>

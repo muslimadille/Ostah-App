@@ -1,17 +1,12 @@
-package com.ostah_app.base
 
-import android.content.DialogInterface
 import android.content.res.Configuration
 import android.view.ContextThemeWrapper
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import com.ostah_app.R
-import com.ostah_app.utiles.ComplexPreferences
 import com.ostah_app.utiles.Q
-import java.lang.Error
+import com.ostah_app.utiles.ComplexPreferences
 import java.util.*
 
-open class BaseActivity : AppCompatActivity() {
+ open class BaseActivity : AppCompatActivity() {
     var preferences: ComplexPreferences? = null
 
     companion object {

@@ -1,8 +1,8 @@
-package com.ostah_app.base
+package com.ostah_app.views.base
 
 import android.app.Application
-import com.ostah_app.utiles.ComplexPreferences
 import com.ostah_app.utiles.Q
+import com.ostah_app.utiles.ComplexPreferences
 import java.util.*
 
 class App : Application() {
