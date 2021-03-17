@@ -81,6 +81,51 @@
        android:layout_margin="10dp"
         android:orientation="vertical"
         />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:visibility="gone"
+        android:id="@+id/contact_ostah_lay"
+        android:layout_width="match_parent"
+        android:layout_marginBottom="10dp"
+        android:layout_height="wrap_content"
+        android:background="#00009688">
+
+
+        <TextView
+            android:id="@+id/contact_ostah_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            android:gravity="center"
+            android:paddingStart="20dp"
+            android:paddingTop="5dp"
+            android:paddingEnd="20dp"
+            android:paddingBottom="5dp"
+            android:text="تواصل مع أسطة"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="120dp"
+            android:background="@color/base"
+            app:cardElevation="5dp"
+            android:backgroundTint="@color/gray_light"
+            app:cardCornerRadius="80dp"
+            app:layout_constraintBottom_toBottomOf="@+id/contact_ostah_btn"
+            app:layout_constraintStart_toStartOf="@+id/contact_ostah_btn"
+            app:layout_constraintTop_toTopOf="@+id/contact_ostah_btn">
+
+            <ImageView
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_margin="5dp"
+                android:src="@drawable/ic_send_base" />
+        </androidx.cardview.widget.CardView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
     <LinearLayout
         android:id="@+id/no_data_lay"
         android:visibility="gone"

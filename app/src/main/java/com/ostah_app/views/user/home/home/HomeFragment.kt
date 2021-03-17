@@ -144,6 +144,7 @@ class HomeFragment : Fragment() {
                                         servicesList.addAll(it.services)
                                         servicesAddapter!!.notifyDataSetChanged()
                                         onObserveSuccess()
+                                        contact_ostah_lay.visibility=View.VISIBLE
                                     } else {
                                         onObservefaled()
                                         Toast.makeText(mContext, "empty", Toast.LENGTH_SHORT).show()
@@ -225,8 +226,14 @@ class HomeFragment : Fragment() {
             ostah_last_olders_txt.visibility=View.VISIBLE
             initOstahRVAdapter()
             getOstahOrders()
+            contact_ostah_lay.visibility=View.GONE
         }
 
+    }
+    private  fun contactOstah(){
+        contact_ostah_btn.setOnClickListener {
+
+        }
     }
 
 }
