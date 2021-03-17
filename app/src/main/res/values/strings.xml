@@ -14,6 +14,39 @@
 
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="profile_title">Profile</string>
+    <string name="profile">profile</string>
+    <string name="edite_profile">Edit Profile</string>
+    <string name="ostah">Ostah</string>
+    <string name="full_name">Full Name</string>
+    <string name="email">E-mail</string>
+    <string name="phone_num">Phone Number</string>
+    <string name="password">Password</string>
+    <string name="save">Save</string>
+    <string name="login_title">Login</string>
+    <string name="user_title">User</string>
+    <string name="ostah_title">Ostah</string>
+    <string name="dont_have_acount_text">You did not have an account....Register here</string>
+    <string name="department">department:</string>
+    <string name="subject">description:</string>
+    <string name="no_data_available">no data available</string>
+    <string name="topic">topic</string>
+    <string name="type">type</string>
+    <string name="status">status</string>
+    <string name="coast">coast</string>
+    <string name="order_date">order date</string>
+    <string name="end_date">end date</string>
+    <string name="order_now">Order Now</string>
+    <string name="osatahs_list_title">Ostahs List</string>
+    <string name="create_order_title">create order</string>
+    <string name="fixing_ex_hint">Ex:fix iphone screen</string>
+    <string name="now">now</string>
+    <string name="send_order">Send Order</string>
+    <string name="edit">Edit</string>
+    <string name="direct_order_title">contact ostah</string>
+    <string name="order_state">order state</string>
+    <string name="recieve_order">إستلام الطلب</string>
+    <string name="shpw_order_title">معاينة الطلب</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

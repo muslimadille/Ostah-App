@@ -13,6 +13,38 @@
     <string name="profile_title">حسابي</string>
     <string name="try_again">حاول مرة أخرى</string>
     <string name="progress_txt">الرجاء الإنتظار</string>
+    <string name="profile">الملف الشخصي</string>
+    <string name="edite_profile">تعديل الملف</string>
+    <string name="ostah">أسطة</string>
+    <string name="full_name">الأسم بالكامل</string>
+    <string name="email">البريد الإلكتروني</string>
+    <string name="phone_num">رقم التلفون</string>
+    <string name="password">كلمة المرور</string>
+    <string name="save">حفظ</string>
+    <string name="login_title">تسجيل الدخول</string>
+    <string name="user_title">مستخدم</string>
+    <string name="ostah_title">أسطة</string>
+    <string name="dont_have_acount_text">ليس لديك حساب..... سجل من هنا</string>
+    <string name="department">القسم:</string>
+    <string name="subject">الوصف:</string>
+    <string name="no_data_available">no data available</string>
+    <string name="topic">الموضوع</string>
+    <string name="type">النوع</string>
+    <string name="status">الحالة</string>
+    <string name="coast">السعر</string>
+    <string name="order_date">تاريخ الطلب</string>
+    <string name="end_date">تاريخ الإنتهاء</string>
+    <string name="order_now">أطلب الآن</string>
+    <string name="osatahs_list_title">قائمة الفنين</string>
+    <string name="create_order_title">طلب التصليح</string>
+    <string name="fixing_ex_hint">مثال: تصليح شاشة أيفون</string>
+    <string name="now">الآن</string>
+    <string name="send_order">إرسال الطلب</string>
+    <string name="edit">تحديث</string>
+    <string name="direct_order_title">تواصل مع أسطة</string>
+    <string name="order_state">حالة الطلب</string>
+    <string name="recieve_order">إستلام الطلب</string>
+    <string name="shpw_order_title">معاينة الطلب</string>
 
 
 </resources>

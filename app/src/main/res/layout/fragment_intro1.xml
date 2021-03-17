@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="30dp"
+    android:gravity="center"
+    android:background="@color/base_light"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center">
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@mipmap/logo"
+            />
+        <TextView
+            android:id="@+id/logo_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="أسطة"
+            android:textColor="@color/white"
+            android:textSize="30sp"/>
+
+
+    </LinearLayout>
+    <TextView
+        android:layout_marginTop="50dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="أهلا بيك"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        android:gravity="center"
+        android:textStyle="bold"
+        />
+    <TextView
+        android:layout_marginTop="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="يوفر لك تطبيق اسطةخدمة التصليح بأسرع وقت واقل تكلفة"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:gravity="center"
+        android:textStyle="bold"
+        />
+    <ImageView
+        android:layout_marginTop="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:src="@drawable/slider_1"
+        />
+
+
+
+</LinearLayout>

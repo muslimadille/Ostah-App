@@ -1,33 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.ostah_app">
+
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
-        android:name=".views.base.App"
+        android:name=".views.user.base.App"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.OstahApp">
-
-
-
-
-        <activity android:name=".views.registeration.RegisterationActivity">
-
-        </activity>
-        <activity android:name=".views.login.LoginActivity">
+        <activity android:name=".views.user.introSlider.IntroWizardActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".views.home.MainActivity">
+        <activity android:name=".views.user.home.profile.SenderDetailsActivity"></activity>
+        <activity android:name=".views.user.home.orders.OstaRecievOrderActivity" />
+        <activity android:name=".views.user.home.profile.OstaProfileDetailsActivity" />
+        <activity android:name=".views.user.home.orders.OrderStateActivity" />
+        <activity android:name=".views.user.home.home.orders.ostahs_list.new_order.DirectOrderActivity" />
+        <activity android:name=".views.user.home.home.orders.ostahs_list.new_order.CreateOrderActivity" />
+        <activity android:name=".views.user.home.home.orders.ostahs_list.OstahsListActivity" />
+        <activity android:name=".views.user.splash.SplashActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
+        <activity android:name=".views.user.registeration.RegisterationActivity" />
+        <activity android:name=".views.user.login.LoginActivity" />
+        <activity android:name=".views.user.home.MainActivity" />
     </application>
 
 </manifest>

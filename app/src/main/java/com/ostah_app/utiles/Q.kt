@@ -10,6 +10,27 @@ object Q {
 
     const val LOGIN_API="login"
     const val SERVICES_API="services"
+    const val USER_PROFILE="user/profile"
+    const val USER_ALL_ORDERS="user/tickets"
+    const val USER_PREVIOUS_ORDERS="user/previous-tickets"
+    const val OSTAHS_LIST_API="ostaaas/search"
+    const val CREATE_ORDER="user/ticket/create"
+    const val DIRECT_ORDER="user/direct-ticket/create"
+    const val CANCEL_ORDER="user/ticket/cancel"
+    const val DONE_ORDER="user/ticket/cancel"
+/*****************ostah apis*******************************************************/
+
+    const val OSTAH_LAST_ORDERS="ostaaa/last-tickets"
+    const val OSTAH_PROFILE="ostaaa/profile"
+    const val SENDER_DATA="ostaaa/user"
+
+
+
+
+
+
+
+
 
 
     /*****************************************************************/
@@ -37,6 +58,10 @@ object Q {
     var USER_ID="user_id"
     var USER_GENDER="gender_id"
     var USER_BIRTH="USER_BIRTH"
+    var NORMAL_USER=1
+    var OSTAH_USER=2
+    var USER_TYPE="user_type"
+
 
 
 

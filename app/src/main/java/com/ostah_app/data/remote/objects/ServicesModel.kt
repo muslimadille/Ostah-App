@@ -13,5 +13,7 @@ data class Services(
         @SerializedName("name")
         var name:String,
         @SerializedName("image")
-        var image:String
+        var image:String,
+        @SerializedName("active")
+        var active:Int
 )

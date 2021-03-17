@@ -21,4 +21,15 @@ data class UserResposeModel (
     var lat: Double,
     @SerializedName("lng")
     var lng: Double,
+    @SerializedName("distance")
+    var distance: Long,
+    @SerializedName("rating")
+    var rating: Double,
+    @SerializedName("service")
+    var service: Services,
+
+)
+data class OstahList(
+    @SerializedName("users")
+    var ostahList:ArrayList<UserResposeModel>
 )

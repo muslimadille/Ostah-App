@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".views.login.LoginActivity">
+    tools:context=".views.user.login.LoginActivity">
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -14,130 +14,144 @@
 
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:text="تسجيل الدخول"
+            android:text="@string/login_title"
             android:textColor="@color/white"
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
-    <LinearLayout
+    <ScrollView
+        android:id="@+id/login_lay"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:orientation="vertical"
         android:layout_weight="1">
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <RadioButton
-                android:id="@+id/user_btn"
-                android:layout_margin="10dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:backgroundTint="@color/base"
-                android:textColor="@color/base"
-                android:text="مستخدم"/>
-            <RadioButton
-                android:id="@+id/osta_btn"
-                android:layout_margin="10dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:backgroundTint="@color/base"
-                android:textColor="@color/base"
-                android:text="أسطة"/>
-
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="20dp"
-            android:orientation="vertical">
+            android:layout_height="0dp"
+            android:orientation="vertical"
+            android:layout_weight="1">
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
                 android:orientation="horizontal">
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/name_input_layout"
-                    android:layout_width="match_parent"
+                <RadioButton
+                    android:id="@+id/user_btn"
+                    android:layout_margin="10dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:startIconDrawable="@drawable/phone_blue_ic">
-
-                    <EditText
-                        android:id="@+id/username"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"
-                        android:layout_centerVertical="true"
-                        android:backgroundTint="@color/white"
-                        android:ems="10"
-                        android:hint="رقم التلفون"
-                        android:inputType="text" />
-
-                </com.google.android.material.textfield.TextInputLayout>
+                    android:backgroundTint="@color/base"
+                    android:textColor="@color/base"
+                    android:text="@string/user_title"/>
+                <RadioButton
+                    android:id="@+id/osta_btn"
+                    android:layout_margin="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/base"
+                    android:textColor="@color/base"
+                    android:text="@string/ostah_title"/>
 
             </LinearLayout>
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
-                android:layout_marginBottom="10dp"
-                android:orientation="horizontal">
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/login_pass_word_input_layout"
+                android:layout_margin="20dp"
+                android:orientation="vertical">
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/white"
-                    app:passwordToggleEnabled="true"
-                    app:startIconDrawable="@drawable/password_ic">
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:orientation="horizontal">
 
-                    <EditText
-                        android:id="@+id/login_password"
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/name_input_layout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"
+                        app:startIconDrawable="@drawable/ic_mail_white">
 
-                        android:layout_centerVertical="true"
-                        android:backgroundTint="@color/white"
-                        android:hint="كلمة المرور"
-                        android:inputType="textPassword" />
+                        <EditText
+                            android:id="@+id/username"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_centerHorizontal="true"
+                            android:layout_centerVertical="true"
+                            android:backgroundTint="@color/white"
+                            android:ems="10"
+                            android:hint="@string/email"
+                            android:inputType="text" />
 
-                </com.google.android.material.textfield.TextInputLayout>
+                    </com.google.android.material.textfield.TextInputLayout>
 
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:orientation="horizontal">
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/login_pass_word_input_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/white"
+                        app:passwordToggleEnabled="true"
+                        app:startIconDrawable="@drawable/password_ic">
+
+                        <EditText
+                            android:id="@+id/login_password"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_centerHorizontal="true"
+
+                            android:layout_centerVertical="true"
+                            android:backgroundTint="@color/white"
+                            android:hint="@string/password"
+                            android:inputType="textPassword" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                </LinearLayout>
             </LinearLayout>
+            <Button
+                android:id="@+id/Login_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"
+                android:layout_marginEnd="30dp"
+                android:layout_gravity="center_horizontal"
+                android:backgroundTint="@color/base"
+                android:paddingStart="30dp"
+                android:paddingEnd="30dp"
+                android:text="@string/login"
+                android:textColor="#fff"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="5dp"
+                android:text="@string/dont_have_acount_text"
+                android:textColor="@color/gray"
+                android:textStyle="bold"
+                android:textSize="14sp" />
         </LinearLayout>
-        <Button
-            android:id="@+id/Login_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="30dp"
-            android:layout_marginEnd="30dp"
-            android:layout_gravity="center_horizontal"
-            android:backgroundTint="@color/base"
-            android:paddingStart="30dp"
-            android:paddingEnd="30dp"
-            android:text="دخول"
-            android:textColor="#fff"
-            android:textSize="16sp"
-            android:textStyle="bold" />
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:padding="5dp"
-            android:text="ليس لديك حساب..... سجل من هنا"
-            android:textColor="@color/gray"
-            android:textStyle="bold"
-            android:textSize="14sp" />
-    </LinearLayout>
+    </ScrollView>
+
+    <include layout="@layout/progress_layout"
+        android:id="@+id/progrss_lay"
+        android:layout_height="0dp"
+        android:layout_width="match_parent"
+        android:layout_weight="1"
+        android:visibility="gone"/>
 
 </LinearLayout>

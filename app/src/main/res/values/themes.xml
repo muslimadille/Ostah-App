@@ -1,4 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources xmlns:tools="http://schemas.android.com/tools" xmlns:android="http://schemas.android.com/apk/res/android">
     <!-- Base application theme. -->
     <style name="Theme.OstahApp" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!-- Primary brand color. -->
@@ -13,5 +13,9 @@
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <item name="android:fontFamily">@font/google</item>
         <!-- Customize your theme here. -->
+
     </style>
-</resources>
+    <style name="RatingBar" parent= "android:style/Widget.Material.RatingBar.Small">
+        <item name="colorControlNormal">@color/gray</item>
+        <item name="colorControlActivated">@color/gold</item>
+    </style></resources>

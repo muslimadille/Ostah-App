@@ -14,4 +14,8 @@
         <item name="android:fontFamily">@font/google</item>
         <!-- Customize your theme here. -->
     </style>
+    <style name="RatingBar" parent="Theme.AppCompat">
+        <item name="colorControlNormal">@color/gray</item>
+        <item name="colorControlActivated">@color/gold</item>
+    </style>
 </resources>
