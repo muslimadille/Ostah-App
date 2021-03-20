@@ -42,6 +42,7 @@
             android:gravity="center"/>
     </LinearLayout>
     <LinearLayout
+        android:id="@+id/about_app_btn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -57,6 +58,7 @@
             android:text="عن التطبيق"/>
     </LinearLayout>
     <LinearLayout
+        android:id="@+id/privacy_btn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -72,6 +74,7 @@
             android:text="سياسة الخصوصية"/>
     </LinearLayout>
     <LinearLayout
+        android:id="@+id/call_us"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"

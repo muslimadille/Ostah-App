@@ -1,6 +1,7 @@
 package com.ostah_app.views.user.home.home.orders.ostahs_list.new_order
 
 import BaseActivity
+import SpinnerAdapterCustomFont
 import android.Manifest
 import android.app.DatePickerDialog
 import android.content.DialogInterface
@@ -14,6 +15,7 @@ import android.os.Looper
 import android.provider.Settings
 import android.util.Log
 import android.view.View
+import android.widget.AdapterView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
@@ -24,9 +26,16 @@ import com.ostah_app.data.remote.apiServices.ApiClient
 import com.ostah_app.data.remote.apiServices.SessionManager
 import com.ostah_app.data.remote.objects.BaseResponseModel
 import com.ostah_app.data.remote.objects.OrderTecket
+import com.ostah_app.data.remote.objects.Services
+import com.ostah_app.data.remote.objects.ServicesModel
 import com.ostah_app.views.user.base.GlideObject
 import com.ostah_app.views.user.home.MainActivity
 import kotlinx.android.synthetic.main.activity_direct_order.*
+import kotlinx.android.synthetic.main.activity_direct_order.profile_lay
+import kotlinx.android.synthetic.main.activity_direct_order.progrss_lay
+import kotlinx.android.synthetic.main.activity_direct_order.save_btn_lay
+import kotlinx.android.synthetic.main.activity_direct_order.service_spinner
+import kotlinx.android.synthetic.main.activity_direct_order.user_img
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -45,6 +54,11 @@ class DirectOrderActivity : BaseActivity() {
     var isNow:Int=0
     //date
 
+    private lateinit var servicesSpinnerAdapter: SpinnerAdapterCustomFont
+    private var servicesNamesList = ArrayList<String>()
+    private var servicesList = ArrayList<Services>()
+    private var selectedServiceId=0
+    
     lateinit var dpd: DatePickerDialog
 
     //location-----------------------------------------------------
@@ -67,7 +81,16 @@ class DirectOrderActivity : BaseActivity() {
         setOstahData()
         onSendClicked()
         pickDate()
+
         onNowChecked()
+       if(service_id==0){
+           sercices_spinner_lay.visibility=View.VISIBLE
+           servicesObserver()
+           initSpinner()
+           implementListeners()
+       }else{
+           sercices_spinner_lay.visibility=View.GONE
+       }
     }
     public override fun onStart() {
         super.onStart()
@@ -384,5 +407,75 @@ class DirectOrderActivity : BaseActivity() {
             }
         }
 
+    }
+    private fun initSpinner(){
+        servicesSpinnerAdapter = SpinnerAdapterCustomFont(this, android.R.layout.simple_spinner_item, servicesNamesList)
+        servicesSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        servicesSpinnerAdapter.textSize = 12
+        service_spinner.adapter = servicesSpinnerAdapter
+    }
+    private fun implementListeners() {
+
+        service_spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+                if(servicesList.isNotEmpty()){
+                    selectedServiceId=servicesList[position].id
+                    service_id=selectedServiceId
+                }
+
+            }
+            override fun onNothingSelected(parent: AdapterView<*>) {
+            }
+        }
+
+
+    }
+    private fun servicesObserver() {
+        onObserveStart()
+        apiClient = ApiClient()
+        sessionManager = SessionManager(this)
+        apiClient.getApiService(this).getAllServices()
+            .enqueue(object : Callback<BaseResponseModel<ServicesModel>> {
+                override fun onFailure(call: Call<BaseResponseModel<ServicesModel>>, t: Throwable) {
+                    alertNetwork(false)
+                }
+
+                override fun onResponse(
+                    call: Call<BaseResponseModel<ServicesModel>>,
+                    response: Response<BaseResponseModel<ServicesModel>>
+                ) {
+                    if (response!!.isSuccessful) {
+                        if (response.body()!!.success) {
+                            response.body()!!.data!!.let {
+                                if (it.services.isNotEmpty()) {
+                                    selectedServiceId=it.services[0].id
+                                    service_id=selectedServiceId
+                                    servicesList.addAll(it.services)
+                                    servicesList.forEach { ser->
+                                        if(!servicesNamesList.contains(ser.name))servicesNamesList.add(ser.name)
+                                    }
+                                    servicesSpinnerAdapter!!.notifyDataSetChanged()
+                                    onObserveSuccess()
+                                } else {
+                                    onObservefaled()
+                                    Toast.makeText(this@DirectOrderActivity, "empty", Toast.LENGTH_SHORT).show()
+                                }
+
+                            }
+                        } else {
+                            onObservefaled()
+                            Toast.makeText(this@DirectOrderActivity, "faid", Toast.LENGTH_SHORT).show()
+
+                        }
+
+                    } else {
+                        Toast.makeText(this@DirectOrderActivity, "connect faid", Toast.LENGTH_SHORT).show()
+
+                    }
+
+                }
+
+
+            })
     }
 }

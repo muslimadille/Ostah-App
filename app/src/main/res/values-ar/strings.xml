@@ -27,7 +27,7 @@
     <string name="dont_have_acount_text">ليس لديك حساب..... سجل من هنا</string>
     <string name="department">القسم:</string>
     <string name="subject">الوصف:</string>
-    <string name="no_data_available">no data available</string>
+    <string name="no_data_available">لا يوجد بيانات متاحة</string>
     <string name="topic">الموضوع</string>
     <string name="type">النوع</string>
     <string name="status">الحالة</string>

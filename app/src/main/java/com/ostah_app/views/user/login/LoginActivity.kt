@@ -14,7 +14,9 @@ import com.ostah_app.data.remote.objects.BaseResponseModel
 import com.ostah_app.data.remote.objects.LoginResponseModel
 import com.ostah_app.utiles.Q
 import com.ostah_app.views.user.home.MainActivity
+import com.ostah_app.views.user.registeration.RegisterationActivity
 import kotlinx.android.synthetic.main.activity_login.*
+import kotlinx.android.synthetic.main.activity_sms_verification.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -33,6 +35,7 @@ class LoginActivity : BaseActivity() {
         directLogin()
         handelRdioStates()
         onLoginClicked()
+        onRegisterClicked()
     }
     private fun directLogin(){
         if(preferences!!.getBoolean(Q.IS_LOGIN, false)){
@@ -58,7 +61,10 @@ class LoginActivity : BaseActivity() {
                 apiClient.getApiService(this)
                     .login(nameField.text.toString(), passwordField.text.toString(),userType)
                     .enqueue(object : Callback<BaseResponseModel<LoginResponseModel>> {
-                        override fun onFailure(call: Call<BaseResponseModel<LoginResponseModel>>, t: Throwable) {
+                        override fun onFailure(
+                            call: Call<BaseResponseModel<LoginResponseModel>>,
+                            t: Throwable
+                        ) {
                             alertNetwork(true)
                         }
 
@@ -71,11 +77,11 @@ class LoginActivity : BaseActivity() {
                             if (loginResponse!!.success) {
                                 if (loginResponse?.data!!.status == 200 && loginResponse!!.data!!.user != null) {
                                     //username.text.clear()
-                                   // login_password.text.clear()
+                                    // login_password.text.clear()
                                     sessionManager.saveAuthToken(loginResponse!!.data!!.token)
                                     preferences!!.putBoolean(Q.IS_FIRST_TIME, false)
                                     preferences!!.putBoolean(Q.IS_LOGIN, true)
-                                    preferences!!.putInteger(Q.USER_TYPE,userType )
+                                    preferences!!.putInteger(Q.USER_TYPE, userType)
                                     preferences!!.putInteger(
                                         Q.USER_ID,
                                         loginResponse!!.data!!.user.id.toInt()
@@ -105,17 +111,36 @@ class LoginActivity : BaseActivity() {
                                     startActivity(intent)
                                     finish()
                                 }
-                            }
+                            } else {
+                                if (loginResponse.message.toString()
+                                        .contains("User not verified")
+                                ) {
+                                    var user = if (userType == 1) {
+                                        "user"
+                                    } else {
+                                        "reformer"
+                                    }
+                                    val intent =
+                                        Intent(
+                                            this@LoginActivity,
+                                            SmsVerificationActivity::class.java
+                                        )
+                                    intent.putExtra("phone", "")
+                                    intent.putExtra("type",user)
+                                    intent.putExtra("email", nameField.text.toString())
+                                    intent.putExtra("password", passwordField.text.toString())
+                                    startActivity(intent)
+                                } else {
+                                    Toast.makeText(
+                                        this@LoginActivity,
+                                        loginResponse.message.toString(),
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                    onObservefaled()
+                                }
+                                // username.text.clear()
+                                // login_password.text.clear()
 
-                            else {
-                               onObservefaled()
-                               // username.text.clear()
-                               // login_password.text.clear()
-                                Toast.makeText(
-                                    this@LoginActivity,
-                                    "كلمة المرور او البريد الالكتروني غير صحيح ",
-                                    Toast.LENGTH_SHORT
-                                ).show()
                             }
 
                         }
@@ -193,5 +218,12 @@ class LoginActivity : BaseActivity() {
             alertBuilder.setNegativeButton(R.string.dismiss) { dialog: DialogInterface, _: Int -> dialog.dismiss() }
         }
         alertBuilder.show()
+    }
+    private fun onRegisterClicked(){
+        register_btn.setOnClickListener {
+            val intent=Intent(this,RegisterationActivity::class.java)
+            intent.putExtra("type",userType)
+            startActivity(intent)
+        }
     }
 }

@@ -55,8 +55,8 @@ class CreateOrderActivity : BaseActivity() {
     //location-----------------------------------------------------
     private var fusedLocationClient: FusedLocationProviderClient? = null
     private var lastLocation: Location? = null
-    private var latitudeLabel: String? = null
-    private var longitudeLabel: String? = null
+    private var latitudeLabel: String? = "36.222"
+    private var longitudeLabel: String? = "35.666"
 
     private val TAG = "LocationProvider"
     private val REQUEST_PERMISSIONS_REQUEST_CODE = 52

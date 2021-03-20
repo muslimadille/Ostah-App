@@ -1,4 +1,3 @@
-package com.muslim_adel.sehaty.data.remote.apiServices
 
 import android.content.Context
 import com.ostah_app.data.remote.apiServices.ApiService
@@ -23,8 +22,8 @@ class ApiClientnew {
 
             apiService = retrofit.create(ApiService::class.java)
         }
-
         return apiService
+
     }
 
     /**

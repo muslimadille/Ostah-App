@@ -14,7 +14,6 @@ class AuthInterceptor(context: Context) : Interceptor {
         sessionManager.fetchAuthToken()?.let {
             requestBuilder.addHeader("Authorization", "Bearer $it")
         }
-
         return chain.proceed(requestBuilder.build())
     }
 }

@@ -62,7 +62,7 @@ class IntroWizardActivity :BaseActivity() {
             override fun run() {
                 handler.post(update)
             }
-        }, 3500, 3500)
+        }, 4500, 4500)
 
 
         intro_register_btn.setOnClickListener {

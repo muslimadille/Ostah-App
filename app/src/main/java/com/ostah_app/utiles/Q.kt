@@ -17,8 +17,25 @@ object Q {
     const val CREATE_ORDER="user/ticket/create"
     const val DIRECT_ORDER="user/direct-ticket/create"
     const val CANCEL_ORDER="user/ticket/cancel"
-    const val DONE_ORDER="user/ticket/cancel"
-/*****************ostah apis*******************************************************/
+    const val DONE_ORDER="user/ticket/finish"
+    const val USER_SLIDERS="user/slides"
+    const val OSTAH_SLIDERS="ostaaa/slides"
+    const val PRIVACY="privacy-policy"
+    const val ABOUT="about-us"
+    const val CONTACT_US="contact-us"
+    const val USER_UPDATE="user/profile/update"
+    const val USER_REGISTER="register"
+
+    const val VERIFICATION_API="send-message"
+    const val SEND_CODE_API="verify-user"
+
+
+
+
+
+
+
+    /*****************ostah apis*******************************************************/
 
     const val OSTAH_LAST_ORDERS="ostaaa/last-tickets"
     const val OSTAH_PROFILE="ostaaa/profile"

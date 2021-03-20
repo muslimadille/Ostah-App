@@ -179,35 +179,147 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:visibility="gone"
+                    android:id="@+id/passwords_lay"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginEnd="10dp"
-                    android:layout_marginBottom="10dp"
-                    android:orientation="horizontal">
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:visibility="gone"
-                        android:id="@+id/pass_word_input_layout"
+                    android:orientation="vertical">
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@color/white"
-                        app:passwordToggleEnabled="true"
-                        app:startIconDrawable="@drawable/password_ic">
+                        android:layout_marginStart="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:orientation="horizontal">
 
-                        <EditText
-                            android:id="@+id/password"
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:visibility="visible"
+                            android:id="@+id/old_pass_word_input_layout"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_centerHorizontal="true"
+                            android:background="@color/white"
+                            app:passwordToggleEnabled="true"
+                            app:startIconDrawable="@drawable/password_ic">
 
-                            android:layout_centerVertical="true"
-                            android:backgroundTint="@color/white"
-                            android:hint="@string/password"
-                            android:inputType="textPassword" />
+                            <EditText
+                                android:id="@+id/old_password"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_centerHorizontal="true"
 
-                    </com.google.android.material.textfield.TextInputLayout>
+                                android:layout_centerVertical="true"
+                                android:backgroundTint="@color/white"
+                                android:hint="كلمة المرور القديمة"
+                                android:inputType="textPassword" />
 
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:orientation="horizontal">
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:visibility="visible"
+                            android:id="@+id/new_pass_word_input_layout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@color/white"
+                            app:passwordToggleEnabled="true"
+                            app:startIconDrawable="@drawable/password_ic">
+
+                            <EditText
+                                android:id="@+id/new_password"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_centerHorizontal="true"
+
+                                android:layout_centerVertical="true"
+                                android:backgroundTint="@color/white"
+                                android:hint="كلمة المرور الجديدة"
+                                android:inputType="textPassword" />
+
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:orientation="horizontal">
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:visibility="visible"
+                            android:id="@+id/conf_pass_word_input_layout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@color/white"
+                            app:passwordToggleEnabled="true"
+                            app:startIconDrawable="@drawable/password_ic">
+
+                            <EditText
+                                android:id="@+id/conf_password"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_centerHorizontal="true"
+
+                                android:layout_centerVertical="true"
+                                android:backgroundTint="@color/white"
+                                android:hint="تأكيد كلمة المرور"
+                                android:inputType="textPassword" />
+
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                    </LinearLayout>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_margin="10dp"
+                    android:visibility="gone"
+                    android:id="@+id/sercices_spinner_lay"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="نوع الخدمة*"
+                        android:textSize="14sp"
+                        android:layout_margin="5dp"/>
+                    <Spinner
+                        android:id="@+id/service_spinner"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_margin="10dp"
+                    android:id="@+id/service_name_lay"
+                    android:visibility="visible"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="نوع الخدمة*"
+                        android:textSize="14sp"
+                        android:layout_margin="5dp"/>
+                    <TextView
+                        android:id="@+id/service_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"/>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/gray"/>
                 </LinearLayout>
             </LinearLayout>
             <LinearLayout

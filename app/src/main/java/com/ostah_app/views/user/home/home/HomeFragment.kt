@@ -3,8 +3,10 @@ package com.ostah_app.views.user.home.home
 import android.app.Activity
 import android.content.Context
 import android.content.DialogInterface
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -22,16 +24,24 @@ import com.ostah_app.data.remote.objects.*
 import com.ostah_app.utiles.Q
 import com.ostah_app.views.user.home.MainActivity
 import com.ostah_app.views.user.home.home.orders.ostahs_list.OstahLastOrdersAdapter
+import com.ostah_app.views.user.home.home.orders.ostahs_list.new_order.DirectOrderActivity
 import com.ostah_app.views.user.home.orders.UserOrdersAdapter
+import kotlinx.android.synthetic.main.activity_ostahs_list.*
 import kotlinx.android.synthetic.main.fragment_home.*
+import kotlinx.android.synthetic.main.fragment_home.no_data_lay
 import kotlinx.android.synthetic.main.fragment_home.progrss_lay
+import me.relex.circleindicator.CircleIndicator
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 class HomeFragment : Fragment() {
+    private var sliderAddapter: SliderAdapter? = null
+
+    private val slidsList: MutableList<Slides> = ArrayList()
 
     private var ordersList:MutableList<Tickets> = ArrayList()
     private var ordersListAddapter: OstahLastOrdersAdapter?=null
@@ -57,8 +67,8 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         userCheck()
-
-
+        initSlider()
+        OnDirectOrderClicked()
     }
     private fun getOstahOrders() {
         onObserveStart()
@@ -217,13 +227,17 @@ class HomeFragment : Fragment() {
     @RequiresApi(Build.VERSION_CODES.M)
     private fun userCheck(){
         if(mContext!!.preferences!!.getInteger(Q.USER_TYPE,0)==Q.TYPE_USER){
+            sliderImagesObserver()
             initRVAdapter()
             offersObserver()
+
+
         }
         if(mContext!!.preferences!!.getInteger(Q.USER_TYPE,0)==Q.TYPE_OSTA){
             home_fragment_lay.setBackgroundColor(mContext!!.getColor(R.color.white))
             logo_txt.setTextColor(mContext!!.getColor(R.color.base))
             ostah_last_olders_txt.visibility=View.VISIBLE
+            ostahSliderImagesObserver()
             initOstahRVAdapter()
             getOstahOrders()
             contact_ostah_lay.visibility=View.GONE
@@ -235,5 +249,127 @@ class HomeFragment : Fragment() {
 
         }
     }
+    private fun initSlider(){
 
+
+        sliderAddapter = SliderAdapter(mContext!!, slidsList)
+        offers_pager_Slider.adapter=sliderAddapter
+        val indicator: CircleIndicator = requireView().findViewById(R.id.indicator) as CircleIndicator
+        indicator.setViewPager(offers_pager_Slider)
+        sliderAddapter!!.registerDataSetObserver(indicator.getDataSetObserver());
+
+        val handler = Handler()
+        val update = Runnable {
+            if(offers_pager_Slider!=null){
+
+                if(offers_pager_Slider.currentItem<(slidsList.size-1)){
+                    offers_pager_Slider.currentItem=offers_pager_Slider.currentItem+1
+                }else{
+                    offers_pager_Slider.currentItem=0
+                }
+            }
+
+
+        }
+        Timer().schedule(object : TimerTask() {
+            override fun run() {
+                handler.post(update)
+            }
+        }, 3500, 3500)
+
+    }
+    private fun sliderImagesObserver() {
+        apiClient = ApiClient()
+        sessionManager = SessionManager(mContext!!)
+        apiClient.getApiService(mContext!!).fitchUserSLiderImages()
+                .enqueue(object : Callback<BaseResponseModel<SliderModel>> {
+                    override fun onFailure(call: Call<BaseResponseModel<SliderModel>>, t: Throwable) {
+                        alertNetwork(true)
+                    }
+
+                    override fun onResponse(
+                            call: Call<BaseResponseModel<SliderModel>>,
+                            response: Response<BaseResponseModel<SliderModel>>
+                    ) {
+                        if (response!!.isSuccessful) {
+                            if (response.body()!!.success) {
+                                response.body()!!.data!!.let {
+                                    if (it.slides.isNotEmpty()) {
+                                        it.slides.forEach { offer: Slides ->
+                                            slidsList.add(offer)
+                                            sliderAddapter!!.notifyDataSetChanged()
+                                        }
+                                    } else {
+                                        Toast.makeText(mContext, "empty", Toast.LENGTH_SHORT).show()
+                                    }
+
+                                }
+                            } else {
+                                Toast.makeText(mContext, "faid", Toast.LENGTH_SHORT).show()
+
+                            }
+
+                        } else {
+                            Toast.makeText(mContext, "connect faid", Toast.LENGTH_SHORT).show()
+
+                        }
+
+                    }
+
+
+                })
+    }
+    private fun ostahSliderImagesObserver() {
+        apiClient = ApiClient()
+        sessionManager = SessionManager(mContext!!)
+        apiClient.getApiService(mContext!!).fitchOstahSLiderImages()
+                .enqueue(object : Callback<BaseResponseModel<SliderModel>> {
+                    override fun onFailure(call: Call<BaseResponseModel<SliderModel>>, t: Throwable) {
+                        alertNetwork(true)
+                    }
+
+                    override fun onResponse(
+                            call: Call<BaseResponseModel<SliderModel>>,
+                            response: Response<BaseResponseModel<SliderModel>>
+                    ) {
+                        if (response!!.isSuccessful) {
+                            if (response.body()!!.success) {
+                                response.body()!!.data!!.let {
+                                    if (it.slides.isNotEmpty()) {
+                                        it.slides.forEach { offer: Slides ->
+                                            slidsList.add(offer)
+                                            sliderAddapter!!.notifyDataSetChanged()
+                                        }
+                                    } else {
+                                        Toast.makeText(mContext, "empty", Toast.LENGTH_SHORT).show()
+                                    }
+
+                                }
+                            } else {
+                                Toast.makeText(mContext, "faid", Toast.LENGTH_SHORT).show()
+
+                            }
+
+                        } else {
+                            Toast.makeText(mContext, "connect faid", Toast.LENGTH_SHORT).show()
+
+                        }
+
+                    }
+
+
+                })
+    }
+
+
+    private fun OnDirectOrderClicked(){
+        contact_ostah_lay.setOnClickListener {
+            val intent= Intent(mContext, DirectOrderActivity::class.java)
+            intent.putExtra("service_id",0)
+            intent.putExtra("service_name","")
+            intent.putExtra("service_img","")
+            startActivity(intent)
+
+        }
+    }
 }

@@ -54,8 +54,8 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 android:layout_width="match_parent"
-                android:background="#568E8E8E"
-                android:layout_height="48dp"/>
+                android:background="#418E8E8E"
+                android:layout_height="25dp"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

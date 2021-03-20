@@ -25,6 +25,7 @@
             app:layout_constraintEnd_toEndOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
     <ScrollView
+        android:id="@+id/register_lay"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1">
@@ -38,6 +39,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
                 <RadioButton
+                    android:id="@+id/user_btn"
                     android:layout_margin="10dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -45,6 +47,7 @@
                     android:textColor="@color/base"
                     android:text="مستخدم"/>
                 <RadioButton
+                    android:id="@+id/osta_btn"
                     android:layout_margin="10dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -64,7 +67,13 @@
                     android:layout_marginStart="10dp"
                     android:layout_marginEnd="10dp"
                     android:orientation="horizontal">
-
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        app:civ_circle_background_color="@color/base"
+                        app:civ_border_width="0dp"
+                        app:civ_border_color="@color/blue"
+                        android:src="@drawable/ic_person_whit"/>
                     <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="0dp"
                         android:layout_weight="1"
@@ -72,6 +81,7 @@
                         >
 
                         <EditText
+                            android:id="@+id/name_txt"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_centerHorizontal="true"
@@ -82,13 +92,7 @@
                             android:inputType="text" />
 
                     </com.google.android.material.textfield.TextInputLayout>
-                    <de.hdodenhof.circleimageview.CircleImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        app:civ_circle_background_color="@color/base"
-                        app:civ_border_width="0dp"
-                        app:civ_border_color="@color/blue"
-                        android:src="@drawable/ic_person_whit"/>
+
 
                 </LinearLayout>
                 <LinearLayout
@@ -97,24 +101,6 @@
                     android:layout_marginStart="10dp"
                     android:layout_marginEnd="10dp"
                     android:orientation="horizontal">
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content"
-                        >
-
-                        <EditText
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_centerHorizontal="true"
-                            android:layout_centerVertical="true"
-                            android:backgroundTint="@color/white"
-                            android:ems="10"
-                            android:hint="رقم الموبايل"
-                            android:inputType="text" />
-
-                    </com.google.android.material.textfield.TextInputLayout>
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
@@ -122,6 +108,25 @@
                         app:civ_border_width="1dp"
                         app:civ_border_color="@color/blue"
                         android:src="@drawable/ic_mobile"/>
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        >
+
+                        <EditText
+                            android:id="@+id/phone_txt"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_centerHorizontal="true"
+                            android:layout_centerVertical="true"
+                            android:backgroundTint="@color/white"
+                            android:ems="10"
+                            android:hint="رقم الموبايل"
+                            android:inputType="numberDecimal" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
 
                 </LinearLayout>
                 <LinearLayout
@@ -130,6 +135,13 @@
                     android:layout_marginStart="10dp"
                     android:layout_marginEnd="10dp"
                     android:orientation="horizontal">
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        app:civ_circle_background_color="@color/base"
+                        app:civ_border_width="1dp"
+                        app:civ_border_color="@color/blue"
+                        android:src="@drawable/ic_mail_white"/>
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="0dp"
@@ -138,6 +150,7 @@
                         >
 
                         <EditText
+                            android:id="@+id/email_txt"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_centerHorizontal="true"
@@ -148,13 +161,6 @@
                             android:inputType="text" />
 
                     </com.google.android.material.textfield.TextInputLayout>
-                    <de.hdodenhof.circleimageview.CircleImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        app:civ_circle_background_color="@color/base"
-                        app:civ_border_width="1dp"
-                        app:civ_border_color="@color/blue"
-                        android:src="@drawable/ic_mail_white"/>
 
                 </LinearLayout>
                 <LinearLayout
@@ -163,14 +169,24 @@
                     android:layout_marginStart="10dp"
                     android:layout_marginEnd="10dp"
                     android:orientation="horizontal">
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        app:civ_circle_background_color="@color/base"
+                        app:civ_border_width="1dp"
+                        app:civ_border_color="@color/blue"
+                        android:src="@drawable/ic_password_white"/>
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="0dp"
                         android:layout_weight="1"
                         android:layout_height="wrap_content"
+                        app:passwordToggleEnabled="true"
+
                         >
 
                         <EditText
+                            android:id="@+id/pass_txt"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_centerHorizontal="true"
@@ -178,16 +194,9 @@
                             android:backgroundTint="@color/white"
                             android:ems="10"
                             android:hint="كلمة المرور"
-                            android:inputType="text" />
+                            android:inputType="textPassword" />
 
                     </com.google.android.material.textfield.TextInputLayout>
-                    <de.hdodenhof.circleimageview.CircleImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        app:civ_circle_background_color="@color/base"
-                        app:civ_border_width="1dp"
-                        app:civ_border_color="@color/blue"
-                        android:src="@drawable/ic_password_white"/>
 
                 </LinearLayout>
                 <LinearLayout
@@ -196,24 +205,6 @@
                     android:layout_marginStart="10dp"
                     android:layout_marginEnd="10dp"
                     android:orientation="horizontal">
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content"
-                        >
-
-                        <EditText
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_centerHorizontal="true"
-                            android:layout_centerVertical="true"
-                            android:backgroundTint="@color/white"
-                            android:ems="10"
-                            android:hint="تأكيد كلمة المرور"
-                            android:inputType="text" />
-
-                    </com.google.android.material.textfield.TextInputLayout>
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
@@ -221,6 +212,26 @@
                         app:civ_border_width="1dp"
                         app:civ_border_color="@color/blue"
                         android:src="@drawable/ic_password_white"/>
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        app:passwordToggleEnabled="true"
+                        android:layout_height="wrap_content"
+                        >
+
+                        <EditText
+                            android:id="@+id/con_pass_txt"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_centerHorizontal="true"
+                            android:layout_centerVertical="true"
+                            android:backgroundTint="@color/white"
+                            android:ems="10"
+                            android:hint="تأكيد كلمة المرور"
+                            android:inputType="textPassword" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
 
                 </LinearLayout>
 
@@ -235,6 +246,7 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
                     <RadioButton
+                        android:id="@+id/male_btn"
                         android:layout_margin="10dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -242,6 +254,7 @@
                         android:textColor="@color/base"
                         android:text="ذكر"/>
                     <RadioButton
+                        android:id="@+id/female_btn"
                         android:layout_margin="10dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -255,6 +268,7 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
                     <RadioButton
+                        android:id="@+id/terms_btn"
                         android:layout_margin="10dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -286,5 +300,11 @@
 
         </LinearLayout>
     </ScrollView>
+    <include layout="@layout/progress_layout"
+        android:id="@+id/progrss_lay"
+        android:layout_height="0dp"
+        android:layout_width="match_parent"
+        android:layout_weight="1"
+        android:visibility="gone"/>
 
 </LinearLayout>

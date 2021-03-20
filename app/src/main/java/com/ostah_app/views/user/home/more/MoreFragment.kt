@@ -1,24 +1,38 @@
 package com.ostah_app.views.user.home.more
 
+import android.Manifest
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.ostah_app.R
+import com.ostah_app.data.remote.apiServices.ApiClient
 import com.ostah_app.data.remote.apiServices.SessionManager
+import com.ostah_app.data.remote.objects.AboutUsModel
+import com.ostah_app.data.remote.objects.BaseResponseModel
 import com.ostah_app.utiles.Q
 import com.ostah_app.views.user.home.MainActivity
 import com.ostah_app.views.user.splash.SplashActivity
+import kotlinx.android.synthetic.main.activity_info.*
 import kotlinx.android.synthetic.main.fragment_more.*
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 
 class MoreFragment : Fragment() {
 
     private lateinit var sessionManager: SessionManager
+    private lateinit var apiClient: ApiClient
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,7 +41,7 @@ class MoreFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        // Inflate the layout for this fragment
+        // Inflate the layout for mContext fragment
         return inflater.inflate(R.layout.fragment_more, container, false)
     }
 
@@ -36,6 +50,9 @@ class MoreFragment : Fragment() {
         sessionManager = SessionManager(mContext!!)
         onShareClicked()
         onLogoutClicked()
+        onLAboutClicked()
+        onprivacyClicked()
+        onCallclicked()
     }
     private fun onShareClicked(){
         share_btn.setOnClickListener {
@@ -74,4 +91,112 @@ class MoreFragment : Fragment() {
             mContext!!.finish()
         }
     }
+    private fun onprivacyClicked(){
+        privacy_btn.setOnClickListener {
+            val intent = Intent(mContext, InfoActivity::class.java)
+            intent.putExtra("title","سياسة الخصوصية")
+            intent.putExtra("content","جاري التحميل....")
+            intent.putExtra("id",2)
+            startActivity(intent)
+        }
+    }
+    private fun onLAboutClicked(){
+        about_app_btn.setOnClickListener {
+            val intent = Intent(mContext, InfoActivity::class.java)
+            intent.putExtra("title","عن التطبيق")
+            intent.putExtra("content","جاري التحميل....")
+            intent.putExtra("id",1)
+            startActivity(intent)
+        }
+    }
+    private fun contactUs() {
+        apiClient = ApiClient()
+        sessionManager = SessionManager(mContext!!)
+        apiClient.getApiService(mContext!!).getPhoneInfo()
+            .enqueue(object : Callback<BaseResponseModel<AboutUsModel>> {
+                override fun onFailure(call: Call<BaseResponseModel<AboutUsModel>>, t: Throwable) {
+                    // alertNetwork(true)
+                    Toast.makeText(mContext, "network error", Toast.LENGTH_SHORT).show()
+                    val intent=Intent(Intent.ACTION_CALL, Uri.parse("tel:"+"${mContext!!.preferences!!.getString("app_phone","")
+                        .replace("+","").toString()}"))
+                    mContext!!.startActivity(intent)
+                }
+
+                override fun onResponse(
+                    call: Call<BaseResponseModel<AboutUsModel>>,
+                    response: Response<BaseResponseModel<AboutUsModel>>
+                ) {
+                    if (response!!.isSuccessful) {
+                        if (response.body()!!.success) {
+                            response.body()!!.data!!.let {
+                                if(it.contact_us.isNotEmpty()){
+                                    mContext!!.preferences!!.putString("app_phone",it.contact_us)
+                                    mContext!!.preferences!!.commit()
+                                    val intent=Intent(Intent.ACTION_CALL, Uri.parse("tel:"+"${it.contact_us.replace("+","").toString()}"))
+                                    mContext!!.startActivity(intent)
+                                }
+                            }
+                        } else {
+                            Toast.makeText(mContext, "faid", Toast.LENGTH_SHORT).show()
+                        }
+
+                    } else {
+                        Toast.makeText(mContext, "connect faid", Toast.LENGTH_SHORT).show()
+
+                    }
+                }
+
+            })
+    }
+    private fun onCallclicked(){
+        call_us.setOnClickListener {
+            //contactUs()
+            checkPermission()
+        }
+    }
+    fun checkPermission() {
+        if (ContextCompat.checkSelfPermission(mContext!!,
+                Manifest.permission.CALL_PHONE)
+            != PackageManager.PERMISSION_GRANTED) {
+
+            // Permission is not granted
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(mContext!!,
+                    Manifest.permission.CALL_PHONE)) {
+                // Show an explanation to the user *asynchronously* -- don't block
+                // this thread waiting for the user's response! After the user
+                // sees the explanation, try again to request the permission.
+            } else {
+                // No explanation needed, we can request the permission.
+                ActivityCompat.requestPermissions(mContext!!,
+                    arrayOf(Manifest.permission.CALL_PHONE),
+                    42)
+            }
+        } else {
+            // Permission has already been granted
+            callPhone()
+        }
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int,
+                                            permissions: Array<String>, grantResults: IntArray) {
+        if (requestCode == 42) {
+            // If request is cancelled, the result arrays are empty.
+            if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                // permission was granted, yay!
+                callPhone()
+            } else {
+                // permission denied, boo! Disable the
+                // functionality
+            }
+            return
+        }
+    }
+
+    fun callPhone(){
+        /*val intent = Intent(Intent.ACTION_CALL, Uri.parse("tel:" + "1122334455"))
+        startActivity(intent)*/
+        contactUs()
+    }
+
 }

@@ -14,6 +14,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.ostah_app.R
 import com.ostah_app.data.remote.objects.Services
 import com.ostah_app.views.user.home.home.orders.ostahs_list.OstahsListActivity
+import com.ostah_app.views.user.home.home.orders.ostahs_list.new_order.MapsActivity
 import kotlinx.android.synthetic.main.service_list_item.view.*
 
 class ServicesListAdapter(
@@ -52,7 +53,7 @@ class ServicesListAdapter(
                 .into(holder.service_img!!)
 
         holder.service_lay!!.setOnClickListener {
-           val intent= Intent(mContext, OstahsListActivity::class.java)
+           val intent= Intent(mContext, MapsActivity::class.java)
             intent.putExtra("service_id",service.id)
             intent.putExtra("service_name",service.name)
             intent.putExtra("service_img",service.image)

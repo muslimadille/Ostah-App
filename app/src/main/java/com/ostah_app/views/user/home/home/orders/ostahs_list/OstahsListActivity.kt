@@ -22,8 +22,8 @@ import retrofit2.Response
 class OstahsListActivity : BaseActivity() {
     private lateinit var sessionManager: SessionManager
     private lateinit var apiClient: ApiClient
-    var dumyLat="33.22092649999999736110112280584871768951416015625"
-    var dumyLng="43.6847594999999984111127560026943683624267578125"
+    var lat="33.22092649999999736110112280584871768951416015625"
+    var lng="43.6847594999999984111127560026943683624267578125"
     var servceId=0
     var servceName="قائمة الفنيين"
     var servicesImg=""
@@ -39,6 +39,8 @@ class OstahsListActivity : BaseActivity() {
         servceId=intent.getIntExtra("service_id",0)
         intent.getStringExtra("service_name")?.let { servceName=it }
         servicesImg=intent.getStringExtra("service_img")!!
+        lat=intent.getStringExtra("lat")!!
+        lng=intent.getStringExtra("lng")!!
         service_name_txt.text=servceName
         initRVAdapter()
         getOstahsList()
@@ -54,7 +56,7 @@ class OstahsListActivity : BaseActivity() {
         onObserveStart()
         apiClient = ApiClient()
         sessionManager = SessionManager(this)
-        apiClient.getApiService(this).getOstahsList(servceId,dumyLat,dumyLng)
+        apiClient.getApiService(this).getOstahsList(servceId,lat,lng)
             .enqueue(object : Callback<BaseResponseModel<OstahList>> {
                 override fun onFailure(call: Call<BaseResponseModel<OstahList>>, t: Throwable) {
                     alertNetwork(false)
@@ -65,23 +67,29 @@ class OstahsListActivity : BaseActivity() {
                     response: Response<BaseResponseModel<OstahList>>
                 ) {
                     if (response!!.isSuccessful) {
-                        if (response.body()!!.success) {
+                        if(response.body()!!.message.toString().contains("User not Found!")){
+                            onObserveSuccess()
+                            no_data_lay?.visibility= View.VISIBLE
+                            ostahs__list_rv?.visibility= View.GONE
+                        }
+                        if (response.body()!!.success&&response.body()!!.data!=null) {
                             response.body()!!.data!!.let {
                                 ostahssList.addAll(it.ostahList)
                                 ostahsListAddapter!!.notifyDataSetChanged()
                                 onObserveSuccess()
-                                if(it.ostahList.isEmpty()){
-                                    no_data_lay?.visibility= View.VISIBLE
-                                    ostahs__list_rv?.visibility= View.GONE
-                                }else{
+                                if(it.ostahList.isNotEmpty()){
                                     no_data_lay?.visibility= View.GONE
                                     ostahs__list_rv?.visibility= View.VISIBLE
+
+                                }else{
+                                    no_data_lay?.visibility= View.VISIBLE
+                                    ostahs__list_rv?.visibility= View.GONE
                                 }
                             }
-                        } else {
-                            onObservefaled()
-                            Toast.makeText(this@OstahsListActivity, "faid", Toast.LENGTH_SHORT).show()
-
+                        } else  {
+                            onObserveSuccess()
+                            no_data_lay?.visibility= View.VISIBLE
+                            ostahs__list_rv?.visibility= View.GONE
                         }
 
                     } else {

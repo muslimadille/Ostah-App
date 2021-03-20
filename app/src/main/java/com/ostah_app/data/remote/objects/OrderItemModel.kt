@@ -55,6 +55,10 @@ data class OrderStatus(
     @SerializedName("name")
     var name:String,
 )
+data class singleTicket(
+        @SerializedName("ticket")
+        var ticket:Tickets,
+)
 /****************************************************************/
 data class OrderService (
     @SerializedName("id")
