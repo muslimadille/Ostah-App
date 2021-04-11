@@ -6,21 +6,16 @@
     android:orientation="vertical"
     android:id="@+id/service_item_lay"
     android:gravity="center">
-    <androidx.cardview.widget.CardView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:cardCornerRadius="8000dp"
-        android:layout_margin="10dp"
-        app:cardElevation="3dp"
-        >
-        <ImageView
-            android:layout_margin="20dp"
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            app:civ_circle_background_color="@color/white"
+            android:layout_margin="15dp"
             android:id="@+id/service_img"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:src="@drawable/person_ic"/>
 
-    </androidx.cardview.widget.CardView>
+
     <TextView
         android:id="@+id/service_title"
         android:layout_width="match_parent"

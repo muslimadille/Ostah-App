@@ -28,8 +28,10 @@ import com.ostah_app.data.remote.objects.NormalUserModel
 import com.ostah_app.data.remote.objects.OrderTecket
 import com.ostah_app.views.user.base.GlideObject
 import com.ostah_app.views.user.home.MainActivity
+import com.ostah_app.views.user.login.SmsVerificationActivity
 import com.theartofdev.edmodo.cropper.CropImage
 import com.theartofdev.edmodo.cropper.CropImageView
+import kotlinx.android.synthetic.main.activity_verification.*
 import kotlinx.android.synthetic.main.fragment_profile.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -42,6 +44,10 @@ class ProfileFragment : Fragment() {
     private lateinit var sessionManager: SessionManager
     private lateinit var apiClient: ApiClient
     var userImg=""
+    var userType=""
+    var useremail=""
+    var userpassword=""
+    var currentPhone=""
 
 
 
@@ -67,6 +73,7 @@ class ProfileFragment : Fragment() {
         onSaveClicked()
     }
     private fun setUserData(userModel: NormalUserModel){
+        currentPhone=userModel.phonenumber
         username?.setText(userModel.name)
         email?.setText(userModel.email)
         phone?.setText(userModel.phonenumber)
@@ -235,7 +242,7 @@ class ProfileFragment : Fragment() {
     @RequiresApi(Build.VERSION_CODES.O)
     private fun updateUser(){
         onObserveStart()
-        var img=if(mContext!!.selectedImage!=null){"data:image/${mContext!!.selectedImage!!.extension};base64,"+toBase64(mContext!!.selectedImage.toString())}else{userImg}
+        var img=if(mContext!!.selectedImage!=null){"data:image/${mContext!!.selectedImage!!.extension};base64,"+toBase64(mContext!!.selectedImage.toString())}else{""}
         apiClient = ApiClient()
         sessionManager = SessionManager(mContext!!)
         apiClient.getApiService(mContext!!).updateUser(email.text.toString(),username.text.toString(),img,0,1,"32.0005",phone.text.toString(),"34.3333")
@@ -254,9 +261,12 @@ class ProfileFragment : Fragment() {
                                 if (it!=null) {
                                     onObserveSuccess()
                                     Toast.makeText(mContext, "success", Toast.LENGTH_SHORT).show()
+                                    if(!currentPhone.equals(phone.text.toString())){
+                                        updatePhone()
+                                    }
                                 } else {
                                     onObservefaled()
-                                    Toast.makeText(mContext, "faid", Toast.LENGTH_SHORT).show()
+                                    Toast.makeText(mContext, response.body()!!.message.toString(), Toast.LENGTH_SHORT).show()
 
                                 }
 
@@ -264,6 +274,50 @@ class ProfileFragment : Fragment() {
                         } else {
                             onObservefaled()
                             Toast.makeText(mContext, "faid", Toast.LENGTH_SHORT).show()
+
+                        }
+
+                    } else {
+                        onObservefaled()
+                        Toast.makeText(mContext, "connect faid", Toast.LENGTH_SHORT).show()
+
+                    }
+
+                }
+
+
+            })
+    }
+    private fun updateUserPassword(){
+        onObserveStart()
+        apiClient = ApiClient()
+        sessionManager = SessionManager(mContext!!)
+        apiClient.getApiService(mContext!!).changeUserPassword(old_password.text.toString(),new_password.text.toString())
+            .enqueue(object : Callback<BaseResponseModel<Any>> {
+                override fun onFailure(call: Call<BaseResponseModel<Any>>, t: Throwable) {
+                    alertNetwork(false)
+                }
+
+                override fun onResponse(
+                    call: Call<BaseResponseModel<Any>>,
+                    response: Response<BaseResponseModel<Any>>
+                ) {
+                    if (response!!.isSuccessful) {
+                        if (response.body()!!.success) {
+                            response.body()!!.message!!.let {
+                                if (it!=null&&it.toString().contains("Successfully")) {
+                                    onObserveSuccess()
+                                    Toast.makeText(mContext, "password changed", Toast.LENGTH_SHORT).show()
+                                } else {
+                                    onObservefaled()
+                                    Toast.makeText(mContext, it.toString(), Toast.LENGTH_SHORT).show()
+
+                                }
+
+                            }
+                        } else {
+                            onObservefaled()
+                            Toast.makeText(mContext, response.body()!!.message.toString(), Toast.LENGTH_SHORT).show()
 
                         }
 
@@ -277,10 +331,68 @@ class ProfileFragment : Fragment() {
 
             })
     }
+
     @RequiresApi(Build.VERSION_CODES.O)
     private fun onSaveClicked(){
         save_btn_lay.setOnClickListener {
+            validatePassword()
+        }
+    }
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun validatePassword(){
+        if(old_password.text.isNotEmpty()){
+            if(new_password.text.isNotEmpty()&&conf_password.text.isNotEmpty()&&(new_password.text.toString().equals(conf_password.text.toString()))){
+                updateUser()
+                updateUserPassword()
+            }else{
+                Toast.makeText(mContext, "كلمة المرور الجديدة غير متطابقة مع التأكيد", Toast.LENGTH_SHORT).show()
+            }
+        }else{
             updateUser()
+        }
+
+    }
+    private fun updatePhone(){
+        send_message_btn.setOnClickListener {
+            onObserveStart()
+            apiClient = ApiClient()
+            sessionManager = SessionManager(mContext!!)
+            apiClient.getApiService(mContext!!)
+                .updateUserPhone(phone.text.toString())
+                .enqueue(object : Callback<BaseResponseModel<Any>> {
+                    override fun onFailure(call: Call<BaseResponseModel<Any>>, t: Throwable) {
+                        alertNetwork(false)
+                        onObservefaled()
+                    }
+
+                    override fun onResponse(
+                        call: Call<BaseResponseModel<Any>>,
+                        response: Response<BaseResponseModel<Any>>
+                    ) {
+                        val loginResponse = response.body()
+                        if (loginResponse != null && loginResponse!!.success) {
+                            onObserveSuccess()
+                            val intent=Intent(mContext,SmsVerificationActivity::class.java)
+                            intent.putExtra("phone", phone.text.toString())
+                            intent.putExtra("type","")
+                            intent.putExtra("email", "")
+                            intent.putExtra("password", "")
+                            intent.putExtra("key",1)
+                            startActivity(intent)
+
+                        } else {
+                            onObservefaled()
+                            Toast.makeText(
+                                mContext!!,
+                                "خطا حاول مرة أخري",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+
+                    }
+
+
+                })
         }
     }
 

@@ -55,6 +55,13 @@ class OstahLastOrdersAdapter(
                 val intent = Intent(mContext, OstaRecievOrderActivity::class.java)
                 intent.putExtra("status", order.status_id.toInt())
                 intent.putExtra("id", order.id.toInt())
+                intent.putExtra("details", order.details)
+                intent.putExtra("comment", order.title)
+                intent.putExtra("image", order.user.image)
+                intent.putExtra("name", order.user.name)
+                intent.putExtra("lat",order.lat.toString())
+                intent.putExtra("lng",order.lng.toString())
+
                 mContext.startActivity(intent)
             }
             holder.show_order_btn.setOnClickListener {

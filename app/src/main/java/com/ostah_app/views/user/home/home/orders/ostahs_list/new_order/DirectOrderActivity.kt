@@ -34,8 +34,10 @@ import kotlinx.android.synthetic.main.activity_direct_order.*
 import kotlinx.android.synthetic.main.activity_direct_order.profile_lay
 import kotlinx.android.synthetic.main.activity_direct_order.progrss_lay
 import kotlinx.android.synthetic.main.activity_direct_order.save_btn_lay
+import kotlinx.android.synthetic.main.activity_direct_order.sercices_spinner_lay
 import kotlinx.android.synthetic.main.activity_direct_order.service_spinner
 import kotlinx.android.synthetic.main.activity_direct_order.user_img
+import kotlinx.android.synthetic.main.activity_osta_profile_details.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -70,13 +72,15 @@ class DirectOrderActivity : BaseActivity() {
     private val TAG = "LocationProvider"
     private val REQUEST_PERMISSIONS_REQUEST_CODE = 52
     lateinit var locationRequest: LocationRequest
+
+    var lat="33.22092649999999736110112280584871768951416015625"
+    var lng="43.6847594999999984111127560026943683624267578125"
     //-------------------------------------------------------------
 
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_direct_order)
-        initLocation()
         getIntentValues()
         setOstahData()
         onSendClicked()
@@ -85,172 +89,41 @@ class DirectOrderActivity : BaseActivity() {
         onNowChecked()
        if(service_id==0){
            sercices_spinner_lay.visibility=View.VISIBLE
+           map_lay.visibility=View.VISIBLE
            servicesObserver()
            initSpinner()
            implementListeners()
        }else{
            sercices_spinner_lay.visibility=View.GONE
+           map_lay.visibility=View.GONE
+
        }
     }
-    public override fun onStart() {
-        super.onStart()
-        if (!checkPermissions()) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                requestPermissions()
-            }
-        }
-        else {
-            getLastLocation()
-        }
-    }
-    private fun getLastLocation() {
-        if (ActivityCompat.checkSelfPermission(
-                        this,
-                        Manifest.permission.ACCESS_FINE_LOCATION
-                ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                        this,
-                        Manifest.permission.ACCESS_COARSE_LOCATION
-                ) != PackageManager.PERMISSION_GRANTED
-        ) {
 
-            return
-        }
-        fusedLocationClient?.lastLocation!!.addOnCompleteListener(this) { task ->
-            if (task.isSuccessful) {
-                if(task.result != null){
-                    lastLocation = task.result
-                    latitudeLabel = (lastLocation)!!.latitude.toString()
-                    longitudeLabel= (lastLocation)!!.longitude.toString()
-                }else{
-                    getNewLocation()
-                }
-
-            }
-            else {
-                Log.w(TAG, "getLastLocation:exception", task.exception)
-                showMessage("No location detected. Make sure location is enabled on the device.")
-            }
-        }
-    }
-    private fun getNewLocation(){
-        locationRequest= LocationRequest()
-        locationRequest.priority=LocationRequest.PRIORITY_HIGH_ACCURACY
-        locationRequest.interval=0
-        locationRequest.fastestInterval=0
-        locationRequest.numUpdates=2
-        if (ActivityCompat.checkSelfPermission(
-                        this,
-                        Manifest.permission.ACCESS_FINE_LOCATION
-                ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                        this,
-                        Manifest.permission.ACCESS_COARSE_LOCATION
-                ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            return
-        }
-        fusedLocationClient!!.requestLocationUpdates(locationRequest,locationCallback, Looper.myLooper())
-    }
-    private val locationCallback=object : LocationCallback(){
-        override fun onLocationResult(p0: LocationResult) {
-            var lastLocation=p0.lastLocation
-            latitudeLabel = (lastLocation)!!.latitude.toString()
-            longitudeLabel= (lastLocation)!!.longitude.toString()
-        }
-    }
     private fun getIntentValues(){
         service_name=intent.getStringExtra("service_name")!!
         service_img=intent.getStringExtra("service_img")!!
         service_id=intent.getIntExtra("service_id",0)
+        lat=intent.getStringExtra("lat")!!
+        lng=intent.getStringExtra("lng")!!
     }
     private fun setOstahData(){
         GlideObject.GlideProfilePic(this, service_img,user_img)
         ostah_name_txt.text=service_name
 
     }
-    private fun initLocation(){
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-    }
-    private fun checkPermissions(): Boolean {
-        val permissionState = ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_COARSE_LOCATION
-        )
-        return permissionState == PackageManager.PERMISSION_GRANTED
-    }
-    private fun startLocationPermissionRequest() {
-        ActivityCompat.requestPermissions(
-                this,
-                arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION),
-                REQUEST_PERMISSIONS_REQUEST_CODE
-        )
-    }
-    private fun requestPermissions() {
-        val shouldProvideRationale = ActivityCompat.shouldShowRequestPermissionRationale(
-                this,
-                Manifest.permission.ACCESS_COARSE_LOCATION
-        )
-        if (shouldProvideRationale) {
-            Log.i(TAG, "Displaying permission rationale to provide additional context.")
-            showSnackbar("Location permission is needed for core functionality", "Okay",
-                    View.OnClickListener {
-                        startLocationPermissionRequest()
-                    })
-        }
-        else {
-            Log.i(TAG, "Requesting permission")
-            startLocationPermissionRequest()
-        }
-    }
-    override fun onRequestPermissionsResult(
-            requestCode: Int, permissions: Array<String>,
-            grantResults: IntArray
-    ) {
-        Log.i(TAG, "onRequestPermissionResult")
-        if (requestCode == REQUEST_PERMISSIONS_REQUEST_CODE) {
-            when {
-                grantResults.isEmpty() -> {
-                    // If user interaction was interrupted, the permission request is cancelled and you
-                    // receive empty arrays.
-                    Log.i(TAG, "User interaction was cancelled.")
-                }
-                grantResults[0] == PackageManager.PERMISSION_GRANTED -> {
-                    // Permission granted.
-                    getLastLocation()
-                }
-                else -> {
-                    showSnackbar("Permission was denied", "Settings",
-                            View.OnClickListener {
-                                // Build intent that displays the App settings screen.
-                                val intent = Intent()
-                                intent.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
-                                val uri = Uri.fromParts(
-                                        "package",
-                                        Build.DISPLAY, null
-                                )
-                                intent.data = uri
-                                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                                startActivity(intent)
-                            }
-                    )
-                }
-            }
-        }
-    }
 
-    private fun showMessage(string: String) {
-        Toast.makeText(this, string, Toast.LENGTH_LONG).show()
-    }
-    private fun showSnackbar(
-            mainTextStringId: String, actionStringId: String,
-            listener: View.OnClickListener
-    ) {
-        Toast.makeText(this, mainTextStringId, Toast.LENGTH_LONG).show()
-    }
+
+
+
+
+
+
     private fun creatNewOrder(){
         onObserveStart()
         apiClient = ApiClient()
         sessionManager = SessionManager(this)
-        apiClient.getApiService(this).createDirectOrder(service_id,decription,title,date,isNow,latitudeLabel.toString(),longitudeLabel.toString())
+        apiClient.getApiService(this).createDirectOrder(service_id,decription,title,date,isNow,lat,lng)
                 .enqueue(object : Callback<BaseResponseModel<OrderTecket>> {
                     override fun onFailure(call: Call<BaseResponseModel<OrderTecket>>, t: Throwable) {
                         alertNetwork(false)

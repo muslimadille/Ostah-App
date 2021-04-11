@@ -68,7 +68,7 @@ class SmsVerificationActivity : BaseActivity() {
                             val intent =
                                 Intent(this@SmsVerificationActivity, VerificationActivity::class.java)
                             intent.putExtra("phone","+964"+message_tf.text.toString())
-                            intent.putExtra("type","client")
+                            intent.putExtra("type",type)
                             intent.putExtra("email",email)
                             intent.putExtra("password",password)
                             startActivity(intent)
@@ -99,4 +99,5 @@ class SmsVerificationActivity : BaseActivity() {
         }
         alertBuilder.show()
     }
+
 }

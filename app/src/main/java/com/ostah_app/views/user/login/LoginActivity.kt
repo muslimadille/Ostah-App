@@ -53,13 +53,13 @@ class LoginActivity : BaseActivity() {
         val passwordField:EditText=findViewById(R.id.login_password)
 
         loginBtn.setOnClickListener {
-
+            val devicToken=preferences!!.getString(Q.NOTIFICATION_TOKEN,"")
             if (nameField.text.isNotEmpty() && passwordField.text.isNotEmpty()) {
                 onObserveStart()
                 apiClient = ApiClient()
                 sessionManager = SessionManager(this)
                 apiClient.getApiService(this)
-                    .login(nameField.text.toString(), passwordField.text.toString(),userType)
+                    .login(nameField.text.toString(), passwordField.text.toString(),userType,devicToken)
                     .enqueue(object : Callback<BaseResponseModel<LoginResponseModel>> {
                         override fun onFailure(
                             call: Call<BaseResponseModel<LoginResponseModel>>,

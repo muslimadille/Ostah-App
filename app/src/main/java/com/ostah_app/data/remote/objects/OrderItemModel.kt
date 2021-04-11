@@ -36,9 +36,9 @@ data class Tickets(
     @SerializedName("ticket_type_id")
     var ticket_type_id:Int,
     @SerializedName("lat")
-    var lat:Double,
+    var lat:Float,
     @SerializedName("lng")
-    var lng:Double,
+    var lng:Float,
     @SerializedName("reformer")
     var reformer:UserResposeModel,
     @SerializedName("status")

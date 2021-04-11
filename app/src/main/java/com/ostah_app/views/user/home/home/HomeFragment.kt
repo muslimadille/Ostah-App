@@ -25,6 +25,7 @@ import com.ostah_app.utiles.Q
 import com.ostah_app.views.user.home.MainActivity
 import com.ostah_app.views.user.home.home.orders.ostahs_list.OstahLastOrdersAdapter
 import com.ostah_app.views.user.home.home.orders.ostahs_list.new_order.DirectOrderActivity
+import com.ostah_app.views.user.home.home.orders.ostahs_list.new_order.MapsActivity
 import com.ostah_app.views.user.home.orders.UserOrdersAdapter
 import kotlinx.android.synthetic.main.activity_ostahs_list.*
 import kotlinx.android.synthetic.main.fragment_home.*
@@ -74,8 +75,9 @@ class HomeFragment : Fragment() {
         onObserveStart()
         apiClient = ApiClient()
         sessionManager = SessionManager(mContext!!)
-        apiClient.getApiService(mContext!!).getOstahOrders()
+        apiClient.getApiService(mContext!!).getOstahLastOrders()
             .enqueue(object : Callback<BaseResponseModel<List<Tickets>>> {
+                @RequiresApi(Build.VERSION_CODES.M)
                 override fun onFailure(call: Call<BaseResponseModel<List<Tickets>>>, t: Throwable) {
                     alertNetwork(false)
                 }
@@ -139,6 +141,7 @@ class HomeFragment : Fragment() {
         sessionManager = SessionManager(mContext!!)
         apiClient.getApiService(mContext!!).getAllServices()
                 .enqueue(object : Callback<BaseResponseModel<ServicesModel>> {
+                    @RequiresApi(Build.VERSION_CODES.M)
                     override fun onFailure(call: Call<BaseResponseModel<ServicesModel>>, t: Throwable) {
                         alertNetwork(false)
                     }
@@ -177,6 +180,7 @@ class HomeFragment : Fragment() {
 
                 })
     }
+    @RequiresApi(Build.VERSION_CODES.M)
     fun alertNetwork(isExit: Boolean = true) {
         val alertBuilder = AlertDialog.Builder(mContext!!)
         //alertBuilder.setTitle(R.string.error)
@@ -185,7 +189,7 @@ class HomeFragment : Fragment() {
             // alertBuilder.setPositiveButton(R.string.exit) { dialog: DialogInterface, _: Int -> context!!.finish() }
         } else {
             alertBuilder.setPositiveButton(R.string.try_again) { dialog: DialogInterface, _: Int ->
-                offersObserver()
+                userCheck()
                 dialog.dismiss()}
             alertBuilder.setNegativeButton(R.string.dismiss) { dialog: DialogInterface, _: Int -> dialog.dismiss() }
         }
@@ -283,6 +287,7 @@ class HomeFragment : Fragment() {
         sessionManager = SessionManager(mContext!!)
         apiClient.getApiService(mContext!!).fitchUserSLiderImages()
                 .enqueue(object : Callback<BaseResponseModel<SliderModel>> {
+                    @RequiresApi(Build.VERSION_CODES.M)
                     override fun onFailure(call: Call<BaseResponseModel<SliderModel>>, t: Throwable) {
                         alertNetwork(true)
                     }
@@ -324,6 +329,7 @@ class HomeFragment : Fragment() {
         sessionManager = SessionManager(mContext!!)
         apiClient.getApiService(mContext!!).fitchOstahSLiderImages()
                 .enqueue(object : Callback<BaseResponseModel<SliderModel>> {
+                    @RequiresApi(Build.VERSION_CODES.M)
                     override fun onFailure(call: Call<BaseResponseModel<SliderModel>>, t: Throwable) {
                         alertNetwork(true)
                     }
@@ -364,7 +370,7 @@ class HomeFragment : Fragment() {
 
     private fun OnDirectOrderClicked(){
         contact_ostah_lay.setOnClickListener {
-            val intent= Intent(mContext, DirectOrderActivity::class.java)
+            val intent= Intent(mContext, MapsActivity::class.java)
             intent.putExtra("service_id",0)
             intent.putExtra("service_name","")
             intent.putExtra("service_img","")

@@ -18,6 +18,7 @@ import com.ostah_app.data.remote.apiServices.SessionManager
 import com.ostah_app.data.remote.objects.BaseResponseModel
 import com.ostah_app.data.remote.objects.OrderItemModel
 import com.ostah_app.data.remote.objects.Tickets
+import com.ostah_app.utiles.Q
 import com.ostah_app.views.user.home.MainActivity
 import kotlinx.android.synthetic.main.fragment_orders.*
 import kotlinx.android.synthetic.main.fragment_orders.user_orders_rv
@@ -51,7 +52,11 @@ class OrdersFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initRVAdapter()
-        getUserOrders()
+        if(mContext!!.preferences!!.getInteger(Q.USER_TYPE,0)== Q.TYPE_USER){
+            getUserOrders()
+        }else{
+            getOstahOrders()
+        }
     }
     private fun initRVAdapter(){
         val layoutManager = LinearLayoutManager(mContext!!, RecyclerView.VERTICAL, false)
@@ -76,6 +81,51 @@ class OrdersFragment : Fragment() {
                     if (response!!.isSuccessful) {
                         if (response.body()!!.success) {
                             response.body()!!.data!!.tickets.let {
+                                ordersList.addAll(it)
+                                ordersListAddapter!!.notifyDataSetChanged()
+                                onObserveSuccess()
+                                if(it.isEmpty()){
+                                    no_data_lay?.visibility=View.VISIBLE
+                                    user_orders_rv?.visibility=View.GONE
+                                }else{
+                                    no_data_lay?.visibility=View.GONE
+                                    user_orders_rv?.visibility=View.VISIBLE
+                                }
+                            }
+                        } else {
+                            onObservefaled()
+                            Toast.makeText(mContext, "faid", Toast.LENGTH_SHORT).show()
+
+                        }
+
+                    } else {
+                        onObservefaled()
+                        Toast.makeText(mContext, "connect faid", Toast.LENGTH_SHORT).show()
+
+                    }
+
+                }
+
+
+            })
+    }
+    private fun getOstahOrders() {
+        onObserveStart()
+        apiClient = ApiClient()
+        sessionManager = SessionManager(mContext!!)
+        apiClient.getApiService(mContext!!).getOstahOrders()
+            .enqueue(object : Callback<BaseResponseModel<List<Tickets>>> {
+                override fun onFailure(call: Call<BaseResponseModel<List<Tickets>>>, t: Throwable) {
+                    alertNetwork(false)
+                }
+
+                override fun onResponse(
+                    call: Call<BaseResponseModel<List<Tickets>>>,
+                    response: Response<BaseResponseModel<List<Tickets>>>
+                ) {
+                    if (response!!.isSuccessful) {
+                        if (response.body()!!.success) {
+                            response.body()!!.data!!.let {
                                 ordersList.addAll(it)
                                 ordersListAddapter!!.notifyDataSetChanged()
                                 onObserveSuccess()

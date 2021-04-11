@@ -15,7 +15,7 @@ import com.ostah_app.data.remote.objects.BaseResponseModel
 import com.ostah_app.data.remote.objects.LoginResponseModel
 import com.ostah_app.utiles.Q
 import com.ostah_app.views.user.home.MainActivity
-import kotlinx.android.synthetic.main.activity_sms_verification.*
+import kotlinx.android.synthetic.main.activity_verification.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -27,18 +27,17 @@ class VerificationActivity : BaseActivity() {
     private var type =""
     private var email =""
     private var password =""
-    private var key =0
-    var selectedType="client"
-    var token=""
-    var code=""
+    private var key=0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_verification)
+        key=intent.getIntExtra("key",0)
         type=intent.getStringExtra("type")!!
         email=intent.getStringExtra("email")!!
         password=intent.getStringExtra("password")!!
         phone=intent.getStringExtra("phone")!!
-        onResendClicked()
+        resendMessage()
         onSendClicked()
     }
     private fun onObserveStart() {
@@ -71,8 +70,9 @@ class VerificationActivity : BaseActivity() {
                         response: Response<BaseResponseModel<Any>>
                     ) {
                         val loginResponse = response.body()
-                        if (loginResponse!=null&&loginResponse!!.success) {
+                        if (loginResponse != null && loginResponse!!.success) {
                             onObserveSuccess()
+                            Toast.makeText(this@VerificationActivity, "الرجاء الإنتظار سيتم ارسال رقم تأكيد جديد", Toast.LENGTH_SHORT).show()
                         } else {
                             onObservefaled()
                             Toast.makeText(
@@ -88,6 +88,12 @@ class VerificationActivity : BaseActivity() {
                 })
         }
     }
+    private fun resendMessage(){
+        retry_btn.setOnClickListener {
+            onResendClicked()
+        }
+    }
+
     fun alertNetwork(isExit: Boolean = true) {
         val alertBuilder = AlertDialog.Builder(this)
         //alertBuilder.setTitle(R.string.error)
@@ -98,7 +104,8 @@ class VerificationActivity : BaseActivity() {
             alertBuilder.setNegativeButton(R.string.dismiss) { dialog: DialogInterface, _: Int -> dialog.dismiss() }
         }
         alertBuilder.show()
-    }    private  fun sendNumber(){
+    }
+    private  fun sendNumber(){
         if (message_tf.text.isNotEmpty()){
             onObserveStart()
             apiClient = ApiClient()
@@ -114,9 +121,17 @@ class VerificationActivity : BaseActivity() {
                         response: Response<BaseResponseModel<Any>>
                     ) {
                         val registerResponse = response.body()
-                        if (response.code()!=500&&registerResponse!!.success) {
-                            onObserveSuccess()
-                            login()
+                        if (response.code() != 500 && registerResponse!!.success) {
+                            if (registerResponse.message.toString()
+                                    .contains("{success=not verified}")
+                            ) {
+                                onObserveSuccess()
+                                Toast.makeText(this@VerificationActivity, "تأكد من إدخال كود صحيح", Toast.LENGTH_SHORT).show()
+                            } else {
+                                onObserveSuccess()
+                                login()
+                            }
+
 
                         } else {
 
@@ -144,17 +159,18 @@ class VerificationActivity : BaseActivity() {
     }
     private fun onSendClicked(){
         send_message_btn.setOnClickListener {
-            sendNumber()
+            keySelector()
         }
     }
     private fun login(){
+        val devicToken=preferences!!.getString(Q.NOTIFICATION_TOKEN,"")
         if (true) {
             var userType=if(type.equals("user")){1}else{2}
             onObserveStart()
             apiClient = ApiClient()
             sessionManager = SessionManager(this)
             apiClient.getApiService(this)
-                .login(email,password,userType)
+                .login(email,password,userType,devicToken)
                 .enqueue(object : Callback<BaseResponseModel<LoginResponseModel>> {
                     override fun onFailure(
                         call: Call<BaseResponseModel<LoginResponseModel>>,
@@ -242,6 +258,126 @@ class VerificationActivity : BaseActivity() {
 
 
                 })
+        }
+    }
+    private fun keySelector(){
+        if(key!=0){
+            if( preferences!!.getInteger(Q.USER_TYPE,0)==1){
+                updateUserPhone()
+            }
+            if( preferences!!.getInteger(Q.USER_TYPE,0)==2){
+                updateOstahPhone()
+            }
+
+        }else{
+            sendNumber()
+        }
+    }
+
+    private  fun updateUserPhone(){
+        if (message_tf.text.isNotEmpty()){
+            onObserveStart()
+            apiClient = ApiClient()
+            sessionManager = SessionManager(this)
+            apiClient.getApiService(this).updateUserPhoneVerify(phone,message_tf.text.toString())
+                .enqueue(object : Callback<BaseResponseModel<Any>> {
+                    override fun onFailure(call: Call<BaseResponseModel<Any>>, t: Throwable) {
+                        alertNetwork(true)
+                    }
+
+                    override fun onResponse(
+                        call: Call<BaseResponseModel<Any>>,
+                        response: Response<BaseResponseModel<Any>>
+                    ) {
+                        val registerResponse = response.body()
+                        if (response.code() != 500 && registerResponse!!.success) {
+                            if (registerResponse.message.toString()
+                                    .contains("{success=not verified}")
+                            ) {
+                                onObserveSuccess()
+                                Toast.makeText(this@VerificationActivity, "تأكد من إدخال كود صحيح", Toast.LENGTH_SHORT).show()
+                            } else {
+                                onObserveSuccess()
+                                val intent=Intent(this@VerificationActivity,LoginActivity::class.java)
+                                startActivity(intent)
+                            }
+
+
+                        } else {
+
+                            //username.text.clear()
+                            //login_password.text.clear()
+                            onObservefaled()
+                            Toast.makeText(
+                                this@VerificationActivity,
+                                registerResponse!!.message.toString(),
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+
+                    }
+
+
+                })
+        }else{
+            Toast.makeText(
+                this@VerificationActivity,
+                "من فضلك أدخل رقم صحيح ",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+    }
+    private  fun updateOstahPhone(){
+        if (message_tf.text.isNotEmpty()){
+            onObserveStart()
+            apiClient = ApiClient()
+            sessionManager = SessionManager(this)
+            apiClient.getApiService(this).updateOstahPhoneVerify(phone,message_tf.text.toString())
+                .enqueue(object : Callback<BaseResponseModel<Any>> {
+                    override fun onFailure(call: Call<BaseResponseModel<Any>>, t: Throwable) {
+                        alertNetwork(true)
+                    }
+
+                    override fun onResponse(
+                        call: Call<BaseResponseModel<Any>>,
+                        response: Response<BaseResponseModel<Any>>
+                    ) {
+                        val registerResponse = response.body()
+                        if (response.code() != 500 && registerResponse!!.success) {
+                            if (registerResponse.message.toString()
+                                    .contains("{success=not verified}")
+                            ) {
+                                onObserveSuccess()
+                                Toast.makeText(this@VerificationActivity, "تأكد من إدخال كود صحيح", Toast.LENGTH_SHORT).show()
+                            } else {
+                                onObserveSuccess()
+                                val intent=Intent(this@VerificationActivity,LoginActivity::class.java)
+                                startActivity(intent)
+                            }
+
+
+                        } else {
+
+                            //username.text.clear()
+                            //login_password.text.clear()
+                            onObservefaled()
+                            Toast.makeText(
+                                this@VerificationActivity,
+                                registerResponse!!.message.toString(),
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+
+                    }
+
+
+                })
+        }else{
+            Toast.makeText(
+                this@VerificationActivity,
+                "من فضلك أدخل رقم صحيح ",
+                Toast.LENGTH_SHORT
+            ).show()
         }
     }
 }

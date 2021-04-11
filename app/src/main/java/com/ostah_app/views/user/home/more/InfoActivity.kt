@@ -90,7 +90,7 @@ class InfoActivity : BaseActivity() {
                         if (response.body()!!.success) {
                             response.body()!!.data!!.let {
                                 info_content.text=it.privacy_policy
-                                if(it.about_us.isNotEmpty()){
+                                if(it.privacy_policy.isNotEmpty()){
                                     preferences!!.putString("privacy",it.privacy_policy)
                                     preferences!!.commit()
                                 }

@@ -2,6 +2,7 @@ package com.ostah_app.views.user.home.home.orders.ostahs_list.new_order
 
 import BaseActivity
 import android.Manifest
+import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Address
@@ -44,6 +45,7 @@ class MapsActivity : BaseActivity(), OnMapReadyCallback, LocationListener,
     internal var mGoogleApiClient: GoogleApiClient? = null
     internal lateinit var mLocationRequest: LocationRequest
     var fusedLocationProviderClient: FusedLocationProviderClient?=null
+    var address=""
 
 
     var lat="3.000"
@@ -52,6 +54,7 @@ class MapsActivity : BaseActivity(), OnMapReadyCallback, LocationListener,
     var servceId=0
     var servceName="قائمة الفنيين"
     var servicesImg=""
+    var key=0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,9 +63,18 @@ class MapsActivity : BaseActivity(), OnMapReadyCallback, LocationListener,
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         fusedLocationProviderClient=LocationServices.getFusedLocationProviderClient(this)
         fetchLocation()
-        onnextClicked()
         onSearchClicked()
         servceId=intent.getIntExtra("service_id",0)
+        key=intent.getIntExtra("key",0)
+        if(key!=0){
+            onSaveClicked()
+            next_btn.visibility=View.GONE
+            save_btn.visibility=View.VISIBLE
+        }else{
+            onnextClicked()
+            next_btn.visibility=View.VISIBLE
+            save_btn.visibility=View.GONE
+        }
         servceName=intent.getStringExtra("service_name")!!
         servicesImg=intent.getStringExtra("service_img")!!
 
@@ -97,26 +109,32 @@ class MapsActivity : BaseActivity(), OnMapReadyCallback, LocationListener,
             mMap!!.isMyLocationEnabled = true
         }
         val lat_long=LatLng(mLastLocation?.latitude!!,mLastLocation?.longitude!!)
-        drawMarker(lat_long)
-        mMap!!.setOnMarkerDragListener(object :GoogleMap.OnMarkerDragListener{
-            override fun onMarkerDragStart(p0: Marker?) {
-            }
-
-            override fun onMarkerDrag(p0: Marker?) {
-            }
-
-            override fun onMarkerDragEnd(p0: Marker?) {
-
-                if(mCurrLocationMarker!=null){
-                    mCurrLocationMarker?.remove()
-                    var newLatLng=LatLng(p0?.position!!.latitude,p0.position.longitude)
-                    drawMarker(newLatLng)
-                    lat=p0?.position!!.latitude.toString()
-                    lng=p0.position.longitude.toString()
-
+        if(mMap==null){
+            Toast.makeText(this, " قم بتفعيل خاصية تحدد الموقع في هاتفك", Toast.LENGTH_SHORT).show()
+        }else{
+            drawMarker(lat_long)
+            mMap!!.setOnMarkerDragListener(object :GoogleMap.OnMarkerDragListener{
+                override fun onMarkerDragStart(p0: Marker?) {
                 }
-            }
-        })
+
+                override fun onMarkerDrag(p0: Marker?) {
+                }
+
+                override fun onMarkerDragEnd(p0: Marker?) {
+
+                    if(mCurrLocationMarker!=null){
+                        mCurrLocationMarker?.remove()
+                        var newLatLng=LatLng(p0?.position!!.latitude,p0.position.longitude)
+                        drawMarker(newLatLng)
+                        lat=p0?.position!!.latitude.toString()
+                        lng=p0.position.longitude.toString()
+
+
+                    }
+                }
+            })
+        }
+
 
     }
 
@@ -180,65 +198,103 @@ class MapsActivity : BaseActivity(), OnMapReadyCallback, LocationListener,
         }
     }
     fun searchLocation() {
-        val locationSearch:EditText = findViewById<EditText>(R.id.editText)
-        lateinit var location: String
-        location = locationSearch.text.toString()
-        var addressList: List<Address>? = null
+        if(mMap==null){
+            Toast.makeText(this, "قم بتفعيل خاصية تحديد الموقع بهاتفك", Toast.LENGTH_SHORT).show()
+            finish()
+        }else{
+            val locationSearch:EditText = findViewById<EditText>(R.id.editText)
+            lateinit var location: String
+            location = locationSearch.text.toString()
+            var addressList: List<Address>? = null
 
-        if (location == null || location == "") {
-            Toast.makeText(applicationContext,"provide location",Toast.LENGTH_SHORT).show()
-        }
-        else{
-            val geoCoder = Geocoder(this)
-            try {
-                addressList = geoCoder.getFromLocationName(location, 1)
-
-            } catch (e: IOException) {
-                e.printStackTrace()
-                addressList=null
+            if (location == null || location == "") {
+                Toast.makeText(applicationContext,"provide location",Toast.LENGTH_SHORT).show()
             }
+            else{
+                val geoCoder = Geocoder(this)
+                try {
+                    addressList = geoCoder.getFromLocationName(location, 1)
 
-            if(addressList==null||addressList.isEmpty()){
-                Toast.makeText(applicationContext, "الرجاء إدخال عنوان صحيح", Toast.LENGTH_LONG).show()
-            }else{
-                val address = addressList!![0]
-                val latLng = LatLng(address.latitude, address.longitude)
-                if(mCurrLocationMarker!=null){
-                    mCurrLocationMarker?.remove()
+                } catch (e: IOException) {
+                    e.printStackTrace()
+                    addressList=null
                 }
-                drawMarker(latLng)
-                mMap!!.animateCamera(CameraUpdateFactory.newLatLng(latLng))
-                //Toast.makeText(applicationContext, address.latitude.toString() + " " + address.longitude, Toast.LENGTH_LONG).show()
+
+                if(addressList==null||addressList.isEmpty()){
+                    Toast.makeText(applicationContext, "الرجاء إدخال عنوان صحيح", Toast.LENGTH_LONG).show()
+                }else{
+                    val address = addressList!![0]
+                    val latLng = LatLng(address.latitude, address.longitude)
+                    if(mCurrLocationMarker!=null){
+                        mCurrLocationMarker?.remove()
+                    }
+                    drawMarker(latLng)
+                    mMap!!.animateCamera(CameraUpdateFactory.newLatLng(latLng))
+                    //Toast.makeText(applicationContext, address.latitude.toString() + " " + address.longitude, Toast.LENGTH_LONG).show()
+                }
             }
         }
+
     }
     private fun drawMarker(lat_long:LatLng){
         val markerOption= MarkerOptions().position(lat_long).snippet(getAddress(lat_long.latitude,lat_long.latitude)).draggable(true)
-        mMap!!.animateCamera(CameraUpdateFactory.newLatLng(lat_long))
-        mMap!!.animateCamera(CameraUpdateFactory.newLatLngZoom(lat_long,11f))
-        mCurrLocationMarker=mMap!!.addMarker(markerOption)
-        mCurrLocationMarker?.showInfoWindow()
-        //edit_location_txt.text=getAddress(lat_long.latitude,lat_long.longitude).toString()
-        lat=lat_long.latitude.toString()
-        lng=lat_long.longitude.toString()
-        //Toast.makeText(applicationContext,lat +" "+ lng, Toast.LENGTH_LONG).show()
+        if(mMap==null){
+            Toast.makeText(this, "الرجاء قم بتفعيل خاصية تحديد الموقع", Toast.LENGTH_SHORT).show()
+        }else{
+            mMap?.animateCamera(CameraUpdateFactory.newLatLng(lat_long))
+            mMap?.animateCamera(CameraUpdateFactory.newLatLngZoom(lat_long,11f))
+            mCurrLocationMarker=mMap?.addMarker(markerOption)
+            mCurrLocationMarker?.showInfoWindow()
+            //edit_location_txt.text=getAddress(lat_long.latitude,lat_long.longitude).toString()
+            lat=lat_long.latitude.toString()
+            lng=lat_long.longitude.toString()
+            address=getAddress(lat_long.latitude,lat_long.longitude)
+            //Toast.makeText(applicationContext,lat +" "+ lng, Toast.LENGTH_LONG).show()
+        }
+
 
 
     }
     private  fun getAddress(lat:Double,lng:Double):String{
         val getCoder= Geocoder(this, Locale.getDefault())
         val address=getCoder.getFromLocation(lat,lng,1)
+        if(address.isEmpty()){
+            return ""
+        }
         return address[0].getAddressLine(0).toString()
     }
     private fun onnextClicked(){
         next_btn.setOnClickListener {
-            val intent= Intent(this, OstahsListActivity::class.java)
-            intent.putExtra("service_id",servceId)
-            intent.putExtra("service_name",servceName)
-            intent.putExtra("service_img",servicesImg)
-            intent.putExtra("lat",lat)
-            intent.putExtra("lng",lng)
-            startActivity(intent)
+            if(servceId!=0){
+                val intent= Intent(this, OstahsListActivity::class.java)
+                intent.putExtra("service_id",servceId)
+                intent.putExtra("service_name",servceName)
+                intent.putExtra("service_img",servicesImg)
+                intent.putExtra("lat",lat)
+                intent.putExtra("lng",lng)
+                startActivity(intent)
+            }else{
+                val intent= Intent(this, DirectOrderActivity::class.java)
+                intent.putExtra("service_id",0)
+                intent.putExtra("service_name","")
+                intent.putExtra("service_img","")
+                intent.putExtra("lat",lat)
+                intent.putExtra("lng",lng)
+                startActivity(intent)
+            }
+
+        }
+
+    }
+    private fun onSaveClicked(){
+        save_btn.setOnClickListener {
+            val intent = Intent()
+            intent.putExtra("lat", lat)
+            intent.putExtra("lng", lng)
+            intent.putExtra("address",address)
+            setResult(Activity.RESULT_OK, intent)
+            finish()
+
         }
 
     }

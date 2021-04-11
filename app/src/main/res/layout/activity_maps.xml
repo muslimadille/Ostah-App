@@ -15,7 +15,7 @@
         <ImageView
             android:layout_width="80dp"
             android:layout_height="80dp"
-            android:src="@mipmap/logo"
+            android:src="@drawable/logo"
             />
         <TextView
             android:layout_width="wrap_content"
@@ -98,6 +98,30 @@
             android:layout_weight="1"
             android:layout_height="match_parent"
             android:text="التالي"
+            android:textColor="@color/white"
+            android:gravity="center"
+            android:textSize="18sp"
+            android:layout_margin="10dp"/>
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_width="30dp"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_location_white"
+            map:civ_border_color="@color/white"
+            android:layout_margin="10dp"
+            map:civ_border_width="1dp"/>
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/save_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@drawable/base_rounded_bg"
+        android:layout_margin="10dp">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:text="حفظ"
             android:textColor="@color/white"
             android:gravity="center"
             android:textSize="18sp"

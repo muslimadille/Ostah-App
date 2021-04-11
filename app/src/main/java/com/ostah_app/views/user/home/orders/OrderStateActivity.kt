@@ -69,8 +69,13 @@ class OrderStateActivity : BaseActivity() {
     }
     private fun onShowRateClicked() {
         show_rate_view_btn.setOnClickListener {
-            order_status_view.visibility=View.GONE
-            order_rate_view.visibility=View.VISIBLE
+            if(status==3){
+                order_status_view.visibility=View.GONE
+                order_rate_view.visibility=View.VISIBLE
+            }else{
+                Toast.makeText(this, "الرجاء الانتظار حتي تنتهي مرحلة المعالجة ليتم تنفيذ الطلب", Toast.LENGTH_SHORT).show()
+            }
+
         }
     }
     private fun cancelOrder() {
@@ -93,7 +98,7 @@ class OrderStateActivity : BaseActivity() {
                                 status=it.ticket.status_id
                                 setStatus()
                                 onObserveSuccess()
-                                Toast.makeText(this@OrderStateActivity, "success", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(this@OrderStateActivity, "تم إلغاء الطلب ", Toast.LENGTH_SHORT).show()
                                 /*val intent= Intent(this@OrderStateActivity,MainActivity::class.java)
                                 startActivity(intent)
                                 finish()*/
@@ -118,13 +123,19 @@ class OrderStateActivity : BaseActivity() {
     @RequiresApi(Build.VERSION_CODES.M)
     private fun onDoneOrderClicked(){
         done_order_btn.setOnClickListener {
-            if(rating_price.text.isNotEmpty()&&order_rate_comment.text.isNotEmpty()){
-                doneOrder()
+            if(status==3){
+                if(rating_price.text.isNotEmpty()&&order_rate_comment.text.isNotEmpty()){
+                    doneOrder()
+                }else{
+                    comment_title.setTextColor(getColor(R.color.red))
+                    price_title.setTextColor(getColor(R.color.red))
+                    Toast.makeText(this@OrderStateActivity, "أكمل البيانات", Toast.LENGTH_SHORT).show()
+                }
             }else{
-                comment_title.setTextColor(getColor(R.color.red))
-                price_title.setTextColor(getColor(R.color.red))
-                Toast.makeText(this@OrderStateActivity, "أكمل البيانات", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@OrderStateActivity, "الرجاء الانتظار حتي تتم مرحلة معالجة الطلب لتاكيد التنفيذ", Toast.LENGTH_SHORT).show()
+
             }
+
         }
     }
     private fun doneOrder() {
@@ -148,7 +159,7 @@ class OrderStateActivity : BaseActivity() {
                                     status=it.ticket.status_id
                                     setStatus()
                                     onObserveSuccess()
-                                    Toast.makeText(this@OrderStateActivity, "success", Toast.LENGTH_SHORT).show()
+                                    Toast.makeText(this@OrderStateActivity, "تم تنفيذ الطلب بنجاء", Toast.LENGTH_SHORT).show()
                                     order_status_view.visibility=View.VISIBLE
                                     order_rate_view.visibility=View.GONE
                                     /*val intent= Intent(this@OrderStateActivity,MainActivity::class.java)

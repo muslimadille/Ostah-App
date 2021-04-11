@@ -14,7 +14,11 @@ import com.ostah_app.data.remote.apiServices.ApiClient
 import com.ostah_app.data.remote.apiServices.SessionManager
 import com.ostah_app.data.remote.objects.*
 import com.ostah_app.views.user.home.home.orders.ostahs_list.new_order.DirectOrderActivity
+import com.ostah_app.views.user.home.home.orders.ostahs_list.new_order.MapsActivity
 import kotlinx.android.synthetic.main.activity_ostahs_list.*
+import kotlinx.android.synthetic.main.activity_ostahs_list.no_data_lay
+import kotlinx.android.synthetic.main.activity_ostahs_list.progrss_lay
+import kotlinx.android.synthetic.main.fragment_home.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -141,10 +145,10 @@ class OstahsListActivity : BaseActivity() {
     }
     private fun OnDirectOrderClicked(){
         direct_order_btn.setOnClickListener {
-            val intent=Intent(this,DirectOrderActivity::class.java)
-            intent.putExtra("service_id",servceId)
-            intent.putExtra("service_name",servceName)
-            intent.putExtra("service_img",servicesImg)
+            val intent= Intent(this, MapsActivity::class.java)
+            intent.putExtra("service_id",0)
+            intent.putExtra("service_name","")
+            intent.putExtra("service_img","")
             startActivity(intent)
 
         }

@@ -18,9 +18,9 @@ data class UserResposeModel (
     @SerializedName("service_id")
     var service_id: Int,
     @SerializedName("lat")
-    var lat: Double,
+    var lat: Float,
     @SerializedName("lng")
-    var lng: Double,
+    var lng: Float,
     @SerializedName("distance")
     var distance: Long,
     @SerializedName("rating")

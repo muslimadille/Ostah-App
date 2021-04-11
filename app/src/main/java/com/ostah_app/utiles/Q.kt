@@ -25,30 +25,24 @@ object Q {
     const val CONTACT_US="contact-us"
     const val USER_UPDATE="user/profile/update"
     const val USER_REGISTER="register"
-
     const val VERIFICATION_API="send-message"
     const val SEND_CODE_API="verify-user"
-
-
-
-
-
-
+    const val CHANGE_PASSWORD_USR="user/password/update"
+    const val USER_PHONE_UPDATE="user/phonenumber/update"
+    const val USER__UPDATET_PHONE_VERIFI="user/phonenumber/verify"
 
     /*****************ostah apis*******************************************************/
 
     const val OSTAH_LAST_ORDERS="ostaaa/last-tickets"
+    const val OSTAH_ORDERS="ostaaa/tickets"
+    const val OSTAH_PREVIOS_ORDERS="ostaaa/previous-tickets"
     const val OSTAH_PROFILE="ostaaa/profile"
     const val SENDER_DATA="ostaaa/user"
-
-
-
-
-
-
-
-
-
+    const val CHANGE_PASSWORD_OSTAH="ostaaa/password/update"
+    const val UPDATE_OSTAH="ostaaa/profile/update"
+    const val UPDATE_ORDER="ostaaa/ticket/refresh"
+    const val UPDATE_OSTAH_PHONE="ostaaa/phonenumber/update"
+    const val UPDATE_OSTAH_PHONE_VERIFY="ostaaa/phonenumber/verify"
 
     /*****************************************************************/
 
@@ -59,9 +53,6 @@ object Q {
 
     const val TYPE_USER = 1
     const val TYPE_OSTA = 2
-
-
-
 
     const val LOCALE_AR_INDEX = 0
     const val LOCALE_EN_INDEX = 1
@@ -78,6 +69,7 @@ object Q {
     var NORMAL_USER=1
     var OSTAH_USER=2
     var USER_TYPE="user_type"
+    val NOTIFICATION_TOKEN="notification_token"
 
 
 

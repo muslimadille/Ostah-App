@@ -2,6 +2,7 @@ package com.ostah_app.views.user.home.more
 
 import android.Manifest
 import android.app.Activity
+import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -14,6 +15,8 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.google.firebase.iid.FirebaseInstanceId
+import com.google.firebase.messaging.FirebaseMessaging
 import com.ostah_app.R
 import com.ostah_app.data.remote.apiServices.ApiClient
 import com.ostah_app.data.remote.apiServices.SessionManager
@@ -77,6 +80,9 @@ class MoreFragment : Fragment() {
 
     private fun onLogoutClicked(){
         logout_btn.setOnClickListener {
+            FirebaseMessaging.getInstance().isAutoInitEnabled=false
+            deleteFirebaseId()
+            //FirebaseInstanceId.getInstance().deleteInstanceId()
             sessionManager.saveAuthToken("")
             mContext!!.preferences!!.putBoolean(Q.IS_FIRST_TIME,true)
             mContext!!.preferences!!.putBoolean(Q.IS_LOGIN,false)
@@ -194,9 +200,18 @@ class MoreFragment : Fragment() {
     }
 
     fun callPhone(){
-        /*val intent = Intent(Intent.ACTION_CALL, Uri.parse("tel:" + "1122334455"))
-        startActivity(intent)*/
         contactUs()
     }
+    private fun deleteFirebaseId() {
+        try {
+            (mContext!!.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager).cancelAll()
+            Thread(Runnable {
+                FirebaseInstanceId.getInstance().deleteInstanceId()
+            }).start()
+        } catch (e: Exception) {
+            //AdLog.logCrashlytics(TAG, "deleteFirebaseId", e)
+        }
+    }
+
 
 }

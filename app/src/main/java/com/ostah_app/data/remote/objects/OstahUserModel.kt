@@ -20,9 +20,9 @@ data class OstahUserModel (
     @SerializedName("distance")
     var distance:Int,
     @SerializedName("lat")
-    var lat:Int,
+    var lat:Float,
     @SerializedName("lng")
-    var lng:Int,
+    var lng:Float,
     @SerializedName("bonus")
     var bonus:Int,
     @SerializedName("service")

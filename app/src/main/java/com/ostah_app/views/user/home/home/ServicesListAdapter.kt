@@ -57,7 +57,6 @@ class ServicesListAdapter(
             intent.putExtra("service_id",service.id)
             intent.putExtra("service_name",service.name)
             intent.putExtra("service_img",service.image)
-
             mContext.startActivity(intent)
         }
 

@@ -14,7 +14,7 @@
         <ImageView
             android:layout_width="80dp"
             android:layout_height="80dp"
-            android:src="@mipmap/logo"
+            android:src="@drawable/logo"
             />
         <TextView
             android:layout_width="wrap_content"
@@ -134,6 +134,7 @@
 
                 </LinearLayout>
                 <LinearLayout
+                    android:id="@+id/map_btn"
                     android:layout_margin="5dp"
                     android:background="@drawable/base_rounded_bg"
                     android:layout_width="match_parent"

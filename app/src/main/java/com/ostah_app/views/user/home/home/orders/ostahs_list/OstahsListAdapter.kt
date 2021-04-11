@@ -45,6 +45,8 @@ class OstahsListAdapter(
             intent.putExtra("ostah_name",ostah.name)
             intent.putExtra("ostah_img",ostah.image)
             intent.putExtra("ostah_id",ostah.id.toInt())
+            intent.putExtra("lat",mContext.lat)
+            intent.putExtra("lng",mContext.lng)
 
             mContext.startActivity(intent)
         }

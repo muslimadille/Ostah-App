@@ -44,7 +44,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:backgroundTint="@color/base"
-                    android:textColor="@color/base"
+                    android:textColor="@color/gray"
                     android:text="مستخدم"/>
                 <RadioButton
                     android:id="@+id/osta_btn"
@@ -52,7 +52,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:backgroundTint="@color/base"
-                    android:textColor="@color/base"
+                    android:textColor="@color/gray"
                     android:text="أسطة"/>
 
             </LinearLayout>
@@ -71,8 +71,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         app:civ_circle_background_color="@color/base"
-                        app:civ_border_width="0dp"
-                        app:civ_border_color="@color/blue"
+                        app:civ_border_width="5dp"
+                        app:civ_border_color="@color/base"
                         android:src="@drawable/ic_person_whit"/>
                     <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="0dp"
@@ -105,8 +105,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         app:civ_circle_background_color="@color/base"
-                        app:civ_border_width="1dp"
-                        app:civ_border_color="@color/blue"
+                        app:civ_border_width="5dp"
+                        app:civ_border_color="@color/base"
                         android:src="@drawable/ic_mobile"/>
                     <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="0dp"
@@ -139,9 +139,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         app:civ_circle_background_color="@color/base"
-                        app:civ_border_width="1dp"
-                        app:civ_border_color="@color/blue"
-                        android:src="@drawable/ic_mail_white"/>
+                        app:civ_border_width="5dp"
+                        app:civ_border_color="@color/base"
+                        android:src="@drawable/ic_white_email"/>
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="0dp"
@@ -173,8 +173,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         app:civ_circle_background_color="@color/base"
-                        app:civ_border_width="1dp"
-                        app:civ_border_color="@color/blue"
+                        app:civ_border_width="5dp"
+                        app:civ_border_color="@color/base"
                         android:src="@drawable/ic_password_white"/>
 
                     <com.google.android.material.textfield.TextInputLayout
@@ -209,8 +209,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         app:civ_circle_background_color="@color/base"
-                        app:civ_border_width="1dp"
-                        app:civ_border_color="@color/blue"
+                        app:civ_border_width="5dp"
+                        app:civ_border_color="@color/base"
                         android:src="@drawable/ic_password_white"/>
                     <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="0dp"
@@ -235,7 +235,50 @@
 
                 </LinearLayout>
 
+                <LinearLayout
+                    android:visibility="gone"
+                    android:id="@+id/select_service_lay"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:orientation="horizontal">
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/service_type_ic"/>
+                    <Spinner
+                        android:id="@+id/service_spinner"
+                        android:layout_margin="10dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
 
+
+                </LinearLayout>
+                <LinearLayout
+                    android:visibility="gone"
+                    android:id="@+id/map_lay"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:orientation="horizontal">
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:layout_width="24dp"
+                        app:civ_border_width="5dp"
+                        app:civ_border_color="@color/base"
+                        app:civ_circle_background_color="@color/base"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/ic_location_white"/>
+                    <TextView
+                        android:id="@+id/address_name_txt"
+                        android:layout_margin="10dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="تحديد الموقع"/>
+
+
+                </LinearLayout>
 
 
 
@@ -251,7 +294,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:backgroundTint="@color/base"
-                        android:textColor="@color/base"
+                        android:textColor="@color/gray"
                         android:text="ذكر"/>
                     <RadioButton
                         android:id="@+id/female_btn"
@@ -259,7 +302,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:backgroundTint="@color/base"
-                        android:textColor="@color/base"
+                        android:textColor="@color/gray"
                         android:text="أنثى"/>
 
                 </LinearLayout>
@@ -273,7 +316,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:backgroundTint="@color/base"
-                        android:textColor="@color/base"
+                        android:textColor="@color/gray"
                         android:text="أوافق على الشروط والأحكام"/>
 
 

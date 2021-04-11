@@ -3,6 +3,7 @@ package com.ostah_app.views.user.home.profile
 import BaseActivity
 import SpinnerAdapterCustomFont
 import android.Manifest
+import android.app.Activity
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Build
@@ -22,20 +23,30 @@ import com.ostah_app.data.remote.apiServices.ApiClient
 import com.ostah_app.data.remote.apiServices.SessionManager
 import com.ostah_app.data.remote.objects.*
 import com.ostah_app.views.user.base.GlideObject
+import com.ostah_app.views.user.home.home.orders.ostahs_list.new_order.MapsActivity
+import com.ostah_app.views.user.login.SmsVerificationActivity
 import com.theartofdev.edmodo.cropper.CropImage
 import com.theartofdev.edmodo.cropper.CropImageView
 import kotlinx.android.synthetic.main.activity_osta_profile_details.*
-import kotlinx.android.synthetic.main.fragment_home.*
+import kotlinx.android.synthetic.main.activity_osta_profile_details.address_name_txt
+import kotlinx.android.synthetic.main.activity_osta_profile_details.conf_password
+import kotlinx.android.synthetic.main.activity_osta_profile_details.edit_profile_cb
+import kotlinx.android.synthetic.main.activity_osta_profile_details.email
+import kotlinx.android.synthetic.main.activity_osta_profile_details.map_lay
+import kotlinx.android.synthetic.main.activity_osta_profile_details.new_password
+import kotlinx.android.synthetic.main.activity_osta_profile_details.old_password
+import kotlinx.android.synthetic.main.activity_osta_profile_details.passwords_lay
+import kotlinx.android.synthetic.main.activity_osta_profile_details.phone
+import kotlinx.android.synthetic.main.activity_osta_profile_details.profile_lay
+import kotlinx.android.synthetic.main.activity_osta_profile_details.progrss_lay
+import kotlinx.android.synthetic.main.activity_osta_profile_details.save_btn_lay
+import kotlinx.android.synthetic.main.activity_osta_profile_details.service_spinner
+import kotlinx.android.synthetic.main.activity_osta_profile_details.user_img
+import kotlinx.android.synthetic.main.activity_osta_profile_details.username
+import kotlinx.android.synthetic.main.activity_registeration.*
+import kotlinx.android.synthetic.main.activity_verification.*
 import kotlinx.android.synthetic.main.fragment_profile.*
-import kotlinx.android.synthetic.main.fragment_profile.edit_profile_cb
-import kotlinx.android.synthetic.main.fragment_profile.email
-import kotlinx.android.synthetic.main.fragment_profile.passwords_lay
-import kotlinx.android.synthetic.main.fragment_profile.phone
-import kotlinx.android.synthetic.main.fragment_profile.profile_lay
-import kotlinx.android.synthetic.main.fragment_profile.progrss_lay
-import kotlinx.android.synthetic.main.fragment_profile.save_btn_lay
-import kotlinx.android.synthetic.main.fragment_profile.user_img
-import kotlinx.android.synthetic.main.fragment_profile.username
+
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -51,10 +62,10 @@ class OstaProfileDetailsActivity : BaseActivity() {
     private var selectedServiceId=0
     var selectedImage: File? = null
     var userImg=""
-
-
-
-
+    var lat=""
+    var lng=""
+    var currentPhone=""
+    private val SECOND_ACTIVITY_REQUEST_CODE = 0
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -68,6 +79,7 @@ class OstaProfileDetailsActivity : BaseActivity() {
         onSelectIMageClicked()
         implementListeners()
         onSaveClicked()
+        onSelectLocatinoClicked()
     }
     private fun servicesObserver() {
         onObserveStart()
@@ -117,11 +129,14 @@ class OstaProfileDetailsActivity : BaseActivity() {
     }
 
     private fun setUserData(userModel: OstahUserModel){
+        currentPhone=userModel.phonenumber
         username?.setText(userModel.name)
         email?.setText(userModel.email)
         phone?.setText(userModel.phonenumber)
         service_text?.text=userModel.service.name
         selectedServiceId=userModel.service_id
+        lat=userModel.lat.toString()
+        lng=userModel.lng.toString()
         user_img?.let {
             Glide.with(this).applyDefaultRequestOptions(
                 RequestOptions()
@@ -187,6 +202,7 @@ class OstaProfileDetailsActivity : BaseActivity() {
             save_btn_lay.visibility= View.VISIBLE
             passwords_lay.visibility= View.VISIBLE
             sercices_spinner_lay.visibility=View.VISIBLE
+            map_lay.visibility=View.VISIBLE
             service_name_lay.visibility=View.GONE
 
             username.isEnabled=true
@@ -194,6 +210,8 @@ class OstaProfileDetailsActivity : BaseActivity() {
             phone.isEnabled=true
         }else{
             sercices_spinner_lay.visibility=View.GONE
+            map_lay.visibility=View.GONE
+
             service_name_lay.visibility=View.VISIBLE
             save_btn_lay.visibility= View.GONE
             passwords_lay.visibility= View.GONE
@@ -301,12 +319,12 @@ class OstaProfileDetailsActivity : BaseActivity() {
         return base64
     }
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun userRegister(){
+    private fun updateOstah(){
         onObserveStart()
-        var img=if(selectedImage!=null){"data:image/${selectedImage!!.extension};base64,"+toBase64(selectedImage.toString())}else{userImg}
+        var img=if(selectedImage!=null){"data:image/${selectedImage!!.extension};base64,"+toBase64(selectedImage.toString())}else{""}
         apiClient = ApiClient()
         sessionManager = SessionManager(this!!)
-        apiClient.getApiService(this!!).updateUser(email.text.toString(),username.text.toString(),img,0,1,"32.0005",phone.text.toString(),"34.3333")
+        apiClient.getApiService(this!!).updateOstah(email.text.toString(),username.text.toString(),img,0,selectedServiceId,lat,phone.text.toString(),lng)
             .enqueue(object : Callback<BaseResponseModel<LoginResponseModel>> {
                 override fun onFailure(call: Call<BaseResponseModel<LoginResponseModel>>, t: Throwable) {
                     alertNetwork(false)
@@ -322,6 +340,9 @@ class OstaProfileDetailsActivity : BaseActivity() {
                                 if (it!=null) {
                                     onObserveSuccess()
                                     Toast.makeText(this@OstaProfileDetailsActivity, "success", Toast.LENGTH_SHORT).show()
+                                    if(!currentPhone.equals(phone.text.toString())){
+                                        updatePhone()
+                                    }
                                 } else {
                                     onObservefaled()
                                     Toast.makeText(this@OstaProfileDetailsActivity, "faid", Toast.LENGTH_SHORT).show()
@@ -348,11 +369,20 @@ class OstaProfileDetailsActivity : BaseActivity() {
     @RequiresApi(Build.VERSION_CODES.O)
     private fun onSaveClicked(){
         save_btn_lay.setOnClickListener {
-            userRegister()
+            validatePassword()
         }
     }
     public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == SECOND_ACTIVITY_REQUEST_CODE) {
+            if (resultCode == Activity.RESULT_OK) {
+                // Get String data from Intent
+                address_name_txt.text = data!!.getStringExtra("address")
+                lat=data!!.getStringExtra("lat")!!
+                lng=data!!.getStringExtra("lng")!!
+
+            }
+        }
         if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
             var result: CropImage.ActivityResult? = null
             data?.let { result = CropImage.getActivityResult(data) }
@@ -368,4 +398,120 @@ class OstaProfileDetailsActivity : BaseActivity() {
             }
         }
     }
+    private fun updateOstahPassword(){
+        onObserveStart()
+        apiClient = ApiClient()
+        sessionManager = SessionManager(this)
+        apiClient.getApiService(this).changeOstahPassword(old_password.text.toString(),new_password.text.toString())
+            .enqueue(object : Callback<BaseResponseModel<Any>> {
+                override fun onFailure(call: Call<BaseResponseModel<Any>>, t: Throwable) {
+                    alertNetwork(false)
+                }
+
+                override fun onResponse(
+                    call: Call<BaseResponseModel<Any>>,
+                    response: Response<BaseResponseModel<Any>>
+                ) {
+                    if (response!!.isSuccessful) {
+                        if (response.body()!!.success) {
+                            response.body()!!.message!!.let {
+                                if (it!=null&&it.toString().contains("Successfully")) {
+                                    onObserveSuccess()
+                                    Toast.makeText(this@OstaProfileDetailsActivity, "password changed", Toast.LENGTH_SHORT).show()
+                                } else {
+                                    onObservefaled()
+                                    Toast.makeText(this@OstaProfileDetailsActivity, it.toString(), Toast.LENGTH_SHORT).show()
+
+                                }
+
+                            }
+                        } else {
+                            onObservefaled()
+                            Toast.makeText(this@OstaProfileDetailsActivity, "faid", Toast.LENGTH_SHORT).show()
+
+                        }
+
+                    } else {
+                        Toast.makeText(this@OstaProfileDetailsActivity, "connect faid", Toast.LENGTH_SHORT).show()
+
+                    }
+
+                }
+
+
+            })
+    }
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun validatePassword(){
+        if(old_password.text.isNotEmpty()){
+            if(new_password.text.isNotEmpty()&&conf_password.text.isNotEmpty()&&(new_password.text.toString().equals(conf_password.text.toString()))){
+                updateOstah()
+                updateOstahPassword()
+            }else{
+                Toast.makeText(this@OstaProfileDetailsActivity, "كلمة المرور الجديدة غير متطابقة مع التأكيد", Toast.LENGTH_SHORT).show()
+            }
+        }else{
+            updateOstah()
+        }
+
+    }
+    private fun updatePhone(){
+        send_message_btn.setOnClickListener {
+            onObserveStart()
+            apiClient = ApiClient()
+            sessionManager = SessionManager(this)
+            apiClient.getApiService(this)
+                .updateOstahPhone(phone.text.toString())
+                .enqueue(object : Callback<BaseResponseModel<Any>> {
+                    override fun onFailure(call: Call<BaseResponseModel<Any>>, t: Throwable) {
+                        alertNetwork(false)
+                        onObservefaled()
+                    }
+
+                    override fun onResponse(
+                        call: Call<BaseResponseModel<Any>>,
+                        response: Response<BaseResponseModel<Any>>
+                    ) {
+                        val loginResponse = response.body()
+                        if (loginResponse != null && loginResponse!!.success) {
+                            onObserveSuccess()
+                            val intent=Intent(this@OstaProfileDetailsActivity, SmsVerificationActivity::class.java)
+                            intent.putExtra("phone", phone.text.toString())
+                            intent.putExtra("type","")
+                            intent.putExtra("email", "")
+                            intent.putExtra("password", "")
+                            intent.putExtra("key",1)
+                            startActivity(intent)
+
+                        } else {
+                            onObservefaled()
+                            Toast.makeText(
+                                this@OstaProfileDetailsActivity,
+                                "خطا حاول مرة أخري",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+
+                    }
+
+
+                })
+        }
+    }
+    private fun onSelectLocatinoClicked(){
+        // Start the SecondActivity
+        map_lay.setOnClickListener {
+            val intent = Intent(this, MapsActivity::class.java)
+            intent.putExtra("service_id",0)
+            intent.putExtra("service_name","")
+            intent.putExtra("service_img","")
+            intent.putExtra("key",1)
+
+            startActivityForResult(intent, SECOND_ACTIVITY_REQUEST_CODE)
+        }
+
+    }
+    // This method is called when the second activity finishes
+
+
 }

@@ -48,6 +48,8 @@ class CreateOrderActivity : BaseActivity() {
     var decription=""
     var date=""
     var isNow:Int=0
+    var lat=""
+    var lng=""
     //date
 
     lateinit var dpd: DatePickerDialog
@@ -144,6 +146,8 @@ class CreateOrderActivity : BaseActivity() {
         ostah_name=intent.getStringExtra("ostah_name")!!
         ostah_img=intent.getStringExtra("ostah_img")!!
         ostah_id=intent.getIntExtra("ostah_id",0)
+        lat=intent.getStringExtra("lat")!!
+        lng=intent.getStringExtra("lng")!!
     }
     private fun setOstahData(){
         GlideObject.GlideProfilePic(this, ostah_img,user_img)
@@ -233,7 +237,7 @@ class CreateOrderActivity : BaseActivity() {
         onObserveStart()
         apiClient = ApiClient()
         sessionManager = SessionManager(this)
-        apiClient.getApiService(this).createOrder(ostah_id,decription,title,date,isNow,latitudeLabel.toString(),longitudeLabel.toString())
+        apiClient.getApiService(this).createOrder(ostah_id,decription,title,date,isNow,lat.toString(),lng.toString())
             .enqueue(object : Callback<BaseResponseModel<OrderTecket>> {
                 override fun onFailure(call: Call<BaseResponseModel<OrderTecket>>, t: Throwable) {
                     alertNetwork(false)

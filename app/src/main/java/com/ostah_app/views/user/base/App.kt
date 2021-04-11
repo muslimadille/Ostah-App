@@ -1,6 +1,9 @@
 package com.ostah_app.views.user.base
 
 import android.app.Application
+import android.os.Build
+import com.ostah_app.R
+import com.ostah_app.data.remote.gcm.NotificationUtils
 import com.ostah_app.utiles.Q
 import com.ostah_app.utiles.ComplexPreferences
 import java.util.*
@@ -21,7 +24,15 @@ class App : Application() {
         }else {
             change =""
         }
-
+        createNotificationsChannels()
         BaseActivity.dLocale = Locale(change) //set any locale you want here
+    }
+    private fun createNotificationsChannels() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationUtils.createChannel(this,
+                "general",
+                "general",
+                "general")
+        }
     }
 }

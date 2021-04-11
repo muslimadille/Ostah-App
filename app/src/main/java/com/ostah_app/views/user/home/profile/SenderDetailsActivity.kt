@@ -1,6 +1,8 @@
 package com.ostah_app.views.user.home.profile
 import BaseActivity
 import android.content.DialogInterface
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
@@ -20,14 +22,20 @@ import retrofit2.Response
 
 class SenderDetailsActivity : BaseActivity() {
     var id=0
+    var name=""
+    var lat=""
+    var lng=""
     private lateinit var sessionManager: SessionManager
     private lateinit var apiClient: ApiClient
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sender_details)
         id=intent.getIntExtra("tecket_id",0)
+        lat=intent.getStringExtra("lat")!!
+        lng=intent.getStringExtra("lng")!!
         getUserData()
         onBackClicked()
+        navToMap()
     }
     private fun onBackClicked(){
         back_btn.setOnClickListener {
@@ -128,5 +136,17 @@ class SenderDetailsActivity : BaseActivity() {
             alertBuilder.setNegativeButton(R.string.dismiss) { dialog: DialogInterface, _: Int -> dialog.dismiss() }
         }
         alertBuilder.show()
+    }
+    private fun navToMap(){
+
+        val zoom=10
+        var lable=name
+        val intent= Intent(Intent.ACTION_VIEW)
+        map_btn.setOnClickListener {
+            intent.data= Uri.parse("geo:0,0?z=$zoom&q=$lat,$lng,$lable")
+            if(intent.resolveActivity(packageManager)!=null){
+                startActivity(intent)
+            }
+        }
     }
 }
