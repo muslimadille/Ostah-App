@@ -35,12 +35,16 @@ class MyFirebaseMessagingService: FirebaseMessagingService() {
             resultIntent,
             PendingIntent.FLAG_UPDATE_CURRENT
         )
+        var title=""
+        var body=""
+        if(p0.notification!!.title!=null)title=p0.notification!!.title!!
+        if(p0.notification!!.body!=null)body=p0.notification!!.body!!
         if(p0?.notification!=null){
             Log.d(TAG,"NOTIFICATION:"+p0.notification!!.toString())
                 NotificationUtils.sendNotification(this,
                     "general",
-                    p0.notification!!.title!!,
-                    p0.notification!!.body!!, resultPendingIntent)
+                    title,
+                    body, resultPendingIntent)
 
         }
     }

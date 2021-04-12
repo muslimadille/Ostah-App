@@ -108,6 +108,7 @@ interface ApiService {
         @Field("password") password: String,
         @Field("password_confirmation") password_confirmation: String,
         @Field("accept_privacy_terms") accept_privacy_terms: Int,
+        @Query("device_token") device_token:String
     ): Call<BaseResponseModel<LoginResponseModel>>
 
     @POST(Q.VERIFICATION_API)

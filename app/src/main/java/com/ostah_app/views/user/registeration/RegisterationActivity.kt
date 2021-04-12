@@ -18,6 +18,7 @@ import com.ostah_app.data.remote.objects.BaseResponseModel
 import com.ostah_app.data.remote.objects.LoginResponseModel
 import com.ostah_app.data.remote.objects.Services
 import com.ostah_app.data.remote.objects.ServicesModel
+import com.ostah_app.utiles.Q
 import com.ostah_app.views.user.home.home.orders.ostahs_list.new_order.MapsActivity
 import com.ostah_app.views.user.login.SmsVerificationActivity
 import com.ostah_app.views.user.login.VerificationActivity
@@ -227,6 +228,7 @@ class RegisterationActivity : BaseActivity() {
         }
     }
     private fun register(){
+        val devicToken=preferences!!.getString(Q.NOTIFICATION_TOKEN,"")
         var user = if (userType == 1) {
             "user"
         } else {
@@ -235,7 +237,7 @@ class RegisterationActivity : BaseActivity() {
         onObserveStart()
         apiClient = ApiClient()
         sessionManager = SessionManager(this)
-        apiClient.getApiService(this).userRegister(name_txt.text.toString(),email_txt.text.toString(),userType,"+964"+(phone_txt.text.toString()),gendarType,selectedServiceId,0,lat,lng,pass_txt.text.toString(),con_pass_txt.text.toString(),1)
+        apiClient.getApiService(this).userRegister(name_txt.text.toString(),email_txt.text.toString(),userType,"+964"+(phone_txt.text.toString()),gendarType,selectedServiceId,0,lat,lng,pass_txt.text.toString(),con_pass_txt.text.toString(),1,devicToken)
             .enqueue(object : Callback<BaseResponseModel<LoginResponseModel>> {
                 override fun onFailure(call: Call<BaseResponseModel<LoginResponseModel>>, t: Throwable) {
                     alertNetwork(false)
