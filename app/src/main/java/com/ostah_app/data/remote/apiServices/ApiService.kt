@@ -204,4 +204,7 @@ interface ApiService {
         @Field("code") code: String
     ): Call<BaseResponseModel<Any>>
 
+    @GET
+    fun getOrderStates(@Url url: String): Call<BaseResponseModel<ServicesModel>>
+
 }

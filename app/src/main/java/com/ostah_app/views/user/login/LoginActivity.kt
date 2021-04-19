@@ -3,6 +3,7 @@ package com.ostah_app.views.user.login
 import BaseActivity
 import android.content.DialogInterface
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.*
@@ -10,10 +11,12 @@ import androidx.appcompat.app.AlertDialog
 import com.ostah_app.R
 import com.ostah_app.data.remote.apiServices.ApiClient
 import com.ostah_app.data.remote.apiServices.SessionManager
+import com.ostah_app.data.remote.objects.AboutUsModel
 import com.ostah_app.data.remote.objects.BaseResponseModel
 import com.ostah_app.data.remote.objects.LoginResponseModel
 import com.ostah_app.utiles.Q
 import com.ostah_app.views.user.home.MainActivity
+import com.ostah_app.views.user.home.more.ContactUsActivity
 import com.ostah_app.views.user.registeration.RegisterationActivity
 import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.activity_sms_verification.*
@@ -36,6 +39,8 @@ class LoginActivity : BaseActivity() {
         handelRdioStates()
         onLoginClicked()
         onRegisterClicked()
+        onVisitorClicked()
+        onContatUs()
     }
     private fun directLogin(){
         if(preferences!!.getBoolean(Q.IS_LOGIN, false)){
@@ -80,7 +85,11 @@ class LoginActivity : BaseActivity() {
                                     // login_password.text.clear()
                                     sessionManager.saveAuthToken(loginResponse!!.data!!.token)
                                     preferences!!.putBoolean(Q.IS_FIRST_TIME, false)
-                                    preferences!!.putBoolean(Q.IS_LOGIN, true)
+                                    if(remember_me.isChecked){
+                                        preferences!!.putBoolean(Q.IS_LOGIN, true)
+                                    }else{
+                                        preferences!!.putBoolean(Q.IS_LOGIN, false)
+                                    }
                                     preferences!!.putInteger(Q.USER_TYPE, userType)
                                     preferences!!.putInteger(
                                         Q.USER_ID,
@@ -133,7 +142,7 @@ class LoginActivity : BaseActivity() {
                                 } else {
                                     Toast.makeText(
                                         this@LoginActivity,
-                                        loginResponse.message.toString(),
+                                        "تأكد من اسم المستخدم أو كلمة المرور",
                                         Toast.LENGTH_SHORT
                                     ).show()
                                     onObservefaled()
@@ -225,5 +234,59 @@ class LoginActivity : BaseActivity() {
             intent.putExtra("type",userType)
             startActivity(intent)
         }
+    }
+    private fun onVisitorClicked(){
+        visitor_btn.setOnClickListener {
+            preferences!!.putInteger(Q.USER_TYPE, 1)
+            preferences!!.commit()
+            val intent =
+                Intent(this@LoginActivity, MainActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
+    }
+    private fun onContatUs(){
+        contactus_btn.setOnClickListener {
+            contactUs()
+        }
+    }
+    private fun contactUs() {
+        apiClient = ApiClient()
+        sessionManager = SessionManager(this)
+        apiClient.getApiService(this).getPhoneInfo()
+            .enqueue(object : Callback<BaseResponseModel<AboutUsModel>> {
+                override fun onFailure(call: Call<BaseResponseModel<AboutUsModel>>, t: Throwable) {
+                    // alertNetwork(true)
+                    Toast.makeText(this@LoginActivity, "network error", Toast.LENGTH_SHORT).show()
+                    val intent=Intent(Intent.ACTION_CALL, Uri.parse("tel:"+"${preferences!!.getString("app_phone","")
+                        .replace("+","").toString()}"))
+                    startActivity(intent)
+                }
+
+                override fun onResponse(
+                    call: Call<BaseResponseModel<AboutUsModel>>,
+                    response: Response<BaseResponseModel<AboutUsModel>>
+                ) {
+                    if (response!!.isSuccessful) {
+                        if (response.body()!!.success) {
+                            response.body()!!.data!!.let {
+                                if(it.contact_us.isNotEmpty()){
+                                    preferences!!.putString("app_phone",it.contact_us)
+                                    preferences!!.commit()
+                                    val intent=Intent(this@LoginActivity, ContactUsActivity::class.java)
+                                    startActivity(intent)
+                                }
+                            }
+                        } else {
+                            Toast.makeText(this@LoginActivity, "faid", Toast.LENGTH_SHORT).show()
+                        }
+
+                    } else {
+                        Toast.makeText(this@LoginActivity, "connect faid", Toast.LENGTH_SHORT).show()
+
+                    }
+                }
+
+            })
     }
 }

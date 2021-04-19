@@ -26,13 +26,18 @@ import com.ostah_app.data.remote.objects.BaseResponseModel
 import com.ostah_app.data.remote.objects.LoginResponseModel
 import com.ostah_app.data.remote.objects.NormalUserModel
 import com.ostah_app.data.remote.objects.OrderTecket
+import com.ostah_app.utiles.Q
 import com.ostah_app.views.user.base.GlideObject
 import com.ostah_app.views.user.home.MainActivity
 import com.ostah_app.views.user.login.SmsVerificationActivity
 import com.theartofdev.edmodo.cropper.CropImage
 import com.theartofdev.edmodo.cropper.CropImageView
 import kotlinx.android.synthetic.main.activity_verification.*
+import kotlinx.android.synthetic.main.fragment_orders.*
 import kotlinx.android.synthetic.main.fragment_profile.*
+import kotlinx.android.synthetic.main.fragment_profile.profile_lay
+import kotlinx.android.synthetic.main.fragment_profile.progrss_lay
+import kotlinx.android.synthetic.main.fragment_profile.visitor_lay
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -66,17 +71,24 @@ class ProfileFragment : Fragment() {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        getUserData()
-        activeEdit()
-        onSelectEdite()
-        onSelectIMageClicked()
-        onSaveClicked()
+        if(mContext!!.preferences!!.getString(Q.USER_NAME,"").isNotEmpty()){
+            getUserData()
+            activeEdit()
+            onSelectEdite()
+            onSelectIMageClicked()
+            onSaveClicked()
+        }else{
+            profile_lay.visibility=View.GONE
+            visitor_lay.visibility=View.VISIBLE
+        }
+
+
     }
     private fun setUserData(userModel: NormalUserModel){
         currentPhone=userModel.phonenumber
         username?.setText(userModel.name)
         email?.setText(userModel.email)
-        phone?.setText(userModel.phonenumber)
+        phone?.setText(userModel.phonenumber.replace("+964",""))
         user_img?.let {
             Glide.with(mContext!!).applyDefaultRequestOptions(
                     RequestOptions()
@@ -245,7 +257,7 @@ class ProfileFragment : Fragment() {
         var img=if(mContext!!.selectedImage!=null){"data:image/${mContext!!.selectedImage!!.extension};base64,"+toBase64(mContext!!.selectedImage.toString())}else{""}
         apiClient = ApiClient()
         sessionManager = SessionManager(mContext!!)
-        apiClient.getApiService(mContext!!).updateUser(email.text.toString(),username.text.toString(),img,0,1,"32.0005",phone.text.toString(),"34.3333")
+        apiClient.getApiService(mContext!!).updateUser(email.text.toString(),username.text.toString(),img,0,1,"32.0005","+964"+phone.text.toString(),"34.3333")
             .enqueue(object : Callback<BaseResponseModel<LoginResponseModel>> {
                 override fun onFailure(call: Call<BaseResponseModel<LoginResponseModel>>, t: Throwable) {
                     alertNetwork(false)

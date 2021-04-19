@@ -14,10 +14,7 @@ import androidx.appcompat.app.AlertDialog
 import com.ostah_app.R
 import com.ostah_app.data.remote.apiServices.ApiClient
 import com.ostah_app.data.remote.apiServices.SessionManager
-import com.ostah_app.data.remote.objects.BaseResponseModel
-import com.ostah_app.data.remote.objects.OrderItemModel
-import com.ostah_app.data.remote.objects.OrderTecket
-import com.ostah_app.data.remote.objects.singleTicket
+import com.ostah_app.data.remote.objects.*
 import com.ostah_app.utiles.Q
 import com.ostah_app.views.user.home.MainActivity
 import kotlinx.android.synthetic.main.activity_order_state.*
@@ -43,6 +40,8 @@ class OrderStateActivity : BaseActivity() {
         onCancelClicked()
         onDoneOrderClicked()
         onShowRateClicked()
+        getOrderStatus()
+        refresh()
 
 
 
@@ -72,6 +71,7 @@ class OrderStateActivity : BaseActivity() {
             if(status==3){
                 order_status_view.visibility=View.GONE
                 order_rate_view.visibility=View.VISIBLE
+                refresh_lay.visibility=View.GONE
             }else{
                 Toast.makeText(this, "الرجاء الانتظار حتي تنتهي مرحلة المعالجة ليتم تنفيذ الطلب", Toast.LENGTH_SHORT).show()
             }
@@ -99,9 +99,9 @@ class OrderStateActivity : BaseActivity() {
                                 setStatus()
                                 onObserveSuccess()
                                 Toast.makeText(this@OrderStateActivity, "تم إلغاء الطلب ", Toast.LENGTH_SHORT).show()
-                                /*val intent= Intent(this@OrderStateActivity,MainActivity::class.java)
+                                val intent= Intent(this@OrderStateActivity,MainActivity::class.java)
+                                intent.putExtra("navK",1.toInt())
                                 startActivity(intent)
-                                finish()*/
                             }
                         } else {
                             onObservefaled()
@@ -159,18 +159,24 @@ class OrderStateActivity : BaseActivity() {
                                     status=it.ticket.status_id
                                     setStatus()
                                     onObserveSuccess()
-                                    Toast.makeText(this@OrderStateActivity, "تم تنفيذ الطلب بنجاء", Toast.LENGTH_SHORT).show()
+                                    Toast.makeText(this@OrderStateActivity, "تم تنفيذ الطلب بنجاح", Toast.LENGTH_SHORT).show()
                                     order_status_view.visibility=View.VISIBLE
                                     order_rate_view.visibility=View.GONE
+                                    refresh_lay.visibility=View.VISIBLE
                                     /*val intent= Intent(this@OrderStateActivity,MainActivity::class.java)
                                     startActivity(intent)
                                     finish()*/
+                                    val intent= Intent(this@OrderStateActivity,MainActivity::class.java)
+                                    intent.putExtra("navK",1.toInt())
+                                    startActivity(intent)
                                 }
                             } else {
                                 onObservefaled()
                                 Toast.makeText(this@OrderStateActivity, "faid", Toast.LENGTH_SHORT).show()
                                 order_status_view.visibility=View.VISIBLE
                                 order_rate_view.visibility=View.GONE
+                                refresh_lay.visibility=View.VISIBLE
+
                             }
 
                         } else {
@@ -178,6 +184,8 @@ class OrderStateActivity : BaseActivity() {
                             Toast.makeText(this@OrderStateActivity, "connect faid", Toast.LENGTH_SHORT).show()
                             order_status_view.visibility=View.VISIBLE
                             order_rate_view.visibility=View.GONE
+                            refresh_lay.visibility=View.VISIBLE
+
 
                         }
 
@@ -220,6 +228,57 @@ class OrderStateActivity : BaseActivity() {
         state_lay?.let {
             it.visibility= View.VISIBLE
         }
+    }
+    @RequiresApi(Build.VERSION_CODES.M)
+    private fun refresh(){
+        refresh_btn.setOnClickListener {
+            getOrderStatus()
+        }
+    }
+    private fun getOrderStatus() {
+        onObserveStart()
+        val url = Q.ORDER_STATES +"/${id}"
+        apiClient = ApiClient()
+        sessionManager = SessionManager(this)
+        apiClient.getApiService(this).getOrderStates(url)
+            .enqueue(object : Callback<BaseResponseModel<ServicesModel>> {
+                override fun onFailure(call: Call<BaseResponseModel<ServicesModel>>, t: Throwable) {
+                    alertNetwork(false)
+                }
+                override fun onResponse(
+                    call: Call<BaseResponseModel<ServicesModel>>,
+                    response: Response<BaseResponseModel<ServicesModel>>
+                ) {
+                    if (response!!.isSuccessful) {
+                        if (response.body()!!.success) {
+                            response.body()!!.data!!.let {
+                                onObserveSuccess()
+                                it.statuses.forEach { statuses->
+                                    when(statuses.id){
+                                        1->{order_recieved_indecator.setImageResource(R.drawable.ic_base_true)}
+                                        2->{order_aproved_indecator.setImageResource(R.drawable.ic_base_true)}
+                                        3->{order_inprogres_indecator.setImageResource(R.drawable.ic_base_true)}
+                                        4->{order_done_indecator.setImageResource(R.drawable.ic_base_true)}
+                                        5->{order_deleted_indecator.setImageResource(R.drawable.ic_red_true)}
+                                    }
+                                }
+                            }
+                        } else {
+                            onObservefaled()
+                            Toast.makeText(this@OrderStateActivity, "faid", Toast.LENGTH_SHORT).show()
+
+                        }
+
+                    } else {
+                        onObservefaled()
+                        Toast.makeText(this@OrderStateActivity, "connect faid", Toast.LENGTH_SHORT).show()
+
+                    }
+
+                }
+
+
+            })
     }
 
 }

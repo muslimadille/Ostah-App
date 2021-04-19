@@ -5,15 +5,14 @@ import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.RatingBar
-import android.widget.TextView
+import android.widget.*
 import androidx.recyclerview.widget.RecyclerView
 import com.ostah_app.R
 import com.ostah_app.data.remote.objects.UserResposeModel
+import com.ostah_app.utiles.Q
 import com.ostah_app.views.user.base.GlideObject
 import com.ostah_app.views.user.home.home.orders.ostahs_list.new_order.CreateOrderActivity
+import kotlinx.android.synthetic.main.fragment_orders.*
 import kotlinx.android.synthetic.main.ostahs_list_item.view.*
 import kotlinx.android.synthetic.main.user_order_list_item.view.order_osta_name
 import kotlinx.android.synthetic.main.user_order_list_item.view.order_user_img
@@ -41,14 +40,19 @@ class OstahsListAdapter(
         holder.rating_rate.rating=ostah.rating.toFloat()
         GlideObject.GlideProfilePic(mContext, ostah.image,holder.order_user_img)
         holder.order_btn.setOnClickListener {
-            val intent= Intent(mContext, CreateOrderActivity::class.java)
-            intent.putExtra("ostah_name",ostah.name)
-            intent.putExtra("ostah_img",ostah.image)
-            intent.putExtra("ostah_id",ostah.id.toInt())
-            intent.putExtra("lat",mContext.lat)
-            intent.putExtra("lng",mContext.lng)
+            if(mContext!!.preferences!!.getString(Q.USER_NAME,"").isNotEmpty()){
+                val intent= Intent(mContext, CreateOrderActivity::class.java)
+                intent.putExtra("ostah_name",ostah.name)
+                intent.putExtra("ostah_img",ostah.image)
+                intent.putExtra("ostah_id",ostah.id.toInt())
+                intent.putExtra("lat",mContext.lat)
+                intent.putExtra("lng",mContext.lng)
 
-            mContext.startActivity(intent)
+                mContext.startActivity(intent)
+            }else{
+                Toast.makeText(mContext, "لطلب تصليح قم بتسجيل الدخول ", Toast.LENGTH_SHORT).show()
+            }
+
         }
 
     }

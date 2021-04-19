@@ -138,7 +138,7 @@ class MoreFragment : Fragment() {
                                 if(it.contact_us.isNotEmpty()){
                                     mContext!!.preferences!!.putString("app_phone",it.contact_us)
                                     mContext!!.preferences!!.commit()
-                                    val intent=Intent(Intent.ACTION_CALL, Uri.parse("tel:"+"${it.contact_us.replace("+","").toString()}"))
+                                    val intent=Intent(mContext!!,ContactUsActivity::class.java)
                                     mContext!!.startActivity(intent)
                                 }
                             }

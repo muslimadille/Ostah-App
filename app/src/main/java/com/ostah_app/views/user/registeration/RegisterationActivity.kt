@@ -84,6 +84,7 @@ class RegisterationActivity : BaseActivity() {
                             response.body()!!.data!!.let {
                                 if (it.services.isNotEmpty()) {
                                     servicesList.addAll(it.services)
+                                    selectedServiceId=it.services[0].id
                                     servicesList.forEach { ser->
                                         if(!servicesNamesList.contains(ser.name))servicesNamesList.add(ser.name)
                                     }
@@ -112,32 +113,30 @@ class RegisterationActivity : BaseActivity() {
             })
     }
     private fun inputValidator(){
-        if(name_txt.text.isEmpty()||
-            phone_txt.text.isEmpty()||
-            email_txt.text.isEmpty()||
-            pass_txt.text.isEmpty()||
-            con_pass_txt.text.isEmpty()||
-            selectedServiceId==0){
-            isValid=false
+        if(name_txt.text.toString().isEmpty()||
+            phone_txt.text.toString().isEmpty()||
+            pass_txt.text.toString().isEmpty()||
+            con_pass_txt.text.toString().isEmpty()){
+           // isValid=false
             Toast.makeText(this, "أكمل جميع البيانات", Toast.LENGTH_SHORT).show()
-        }
+        }else
         if(!pass_txt.text.toString().equals(con_pass_txt.text.toString())){
-            isValid=false
+            //isValid=false
             Toast.makeText(this, "كلمة المرور غير متطابقة", Toast.LENGTH_SHORT).show()
-        }
+        }else
         if(phone_txt.text.toString().length>10||phone_txt.text.toString().length>10){
-            isValid=false
+            //isValid=false
             Toast.makeText(this, "ادخل رقم موبايل صحيح", Toast.LENGTH_SHORT).show()
-        }
-        if(selectedServiceId==0){
-            isValid=false
+        }else
+        if(selectedServiceId==0&&userType==2){
+           // isValid=false
             Toast.makeText(this, "اختر نوع الخدمة", Toast.LENGTH_SHORT).show()
-        }
-        if(lat.isEmpty()||lng.isEmpty()){
-            isValid=false
+        }else
+        if((lat.isEmpty()||lng.isEmpty())&&userType==2){
+            //isValid=false
             Toast.makeText(this, "قم بتحديد الموقع", Toast.LENGTH_SHORT).show()
         }
-        if (isValid){
+        else {
             register()
         }
 

@@ -27,10 +27,13 @@ import com.ostah_app.views.user.home.home.orders.ostahs_list.OstahLastOrdersAdap
 import com.ostah_app.views.user.home.home.orders.ostahs_list.new_order.DirectOrderActivity
 import com.ostah_app.views.user.home.home.orders.ostahs_list.new_order.MapsActivity
 import com.ostah_app.views.user.home.orders.UserOrdersAdapter
+import kotlinx.android.synthetic.main.activity_order_state.*
 import kotlinx.android.synthetic.main.activity_ostahs_list.*
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.fragment_home.no_data_lay
 import kotlinx.android.synthetic.main.fragment_home.progrss_lay
+import kotlinx.android.synthetic.main.fragment_home.refresh_btn
+import kotlinx.android.synthetic.main.fragment_home.refresh_lay
 import me.relex.circleindicator.CircleIndicator
 import retrofit2.Call
 import retrofit2.Callback
@@ -70,6 +73,11 @@ class HomeFragment : Fragment() {
         userCheck()
         initSlider()
         OnDirectOrderClicked()
+        refresh()
+        if (mContext!!.preferences!!.getString(Q.USER_NAME,"").isEmpty()){
+            contact_ostah_lay.visibility=View.GONE
+            refresh_lay.visibility=View.VISIBLE
+        }
     }
     private fun getOstahOrders() {
         onObserveStart()
@@ -154,10 +162,13 @@ class HomeFragment : Fragment() {
                             if (response.body()!!.success) {
                                 response.body()!!.data!!.let {
                                     if (it.services.isNotEmpty()) {
+                                        servicesList.clear()
                                         servicesList.addAll(it.services)
                                         servicesAddapter!!.notifyDataSetChanged()
                                         onObserveSuccess()
-                                        contact_ostah_lay.visibility=View.VISIBLE
+                                        contact_ostah_lay?.visibility=View.VISIBLE
+                                        refresh_lay.visibility=View.GONE
+
                                     } else {
                                         onObservefaled()
                                         Toast.makeText(mContext, "empty", Toast.LENGTH_SHORT).show()
@@ -245,17 +256,13 @@ class HomeFragment : Fragment() {
             initOstahRVAdapter()
             getOstahOrders()
             contact_ostah_lay.visibility=View.GONE
+            refresh_lay.visibility=View.VISIBLE
+
         }
 
     }
-    private  fun contactOstah(){
-        contact_ostah_btn.setOnClickListener {
 
-        }
-    }
     private fun initSlider(){
-
-
         sliderAddapter = SliderAdapter(mContext!!, slidsList)
         offers_pager_Slider.adapter=sliderAddapter
         val indicator: CircleIndicator = requireView().findViewById(R.id.indicator) as CircleIndicator
@@ -300,6 +307,7 @@ class HomeFragment : Fragment() {
                             if (response.body()!!.success) {
                                 response.body()!!.data!!.let {
                                     if (it.slides.isNotEmpty()) {
+                                        slidsList.clear()
                                         it.slides.forEach { offer: Slides ->
                                             slidsList.add(offer)
                                             sliderAddapter!!.notifyDataSetChanged()
@@ -324,6 +332,7 @@ class HomeFragment : Fragment() {
 
                 })
     }
+
     private fun ostahSliderImagesObserver() {
         apiClient = ApiClient()
         sessionManager = SessionManager(mContext!!)
@@ -369,6 +378,7 @@ class HomeFragment : Fragment() {
 
 
     private fun OnDirectOrderClicked(){
+
         contact_ostah_lay.setOnClickListener {
             val intent= Intent(mContext, MapsActivity::class.java)
             intent.putExtra("service_id",0)
@@ -376,6 +386,12 @@ class HomeFragment : Fragment() {
             intent.putExtra("service_img","")
             startActivity(intent)
 
+        }
+    }
+    @RequiresApi(Build.VERSION_CODES.M)
+    private fun refresh(){
+        refresh_btn.setOnClickListener {
+            userCheck()
         }
     }
 }

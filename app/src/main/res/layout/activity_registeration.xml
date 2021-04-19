@@ -88,7 +88,7 @@
                             android:layout_centerVertical="true"
                             android:backgroundTint="@color/white"
                             android:ems="10"
-                            android:hint="الأسم"
+                            android:hint="أسم المستخدم"
                             android:inputType="text" />
 
                     </com.google.android.material.textfield.TextInputLayout>
@@ -122,7 +122,7 @@
                             android:layout_centerVertical="true"
                             android:backgroundTint="@color/white"
                             android:ems="10"
-                            android:hint="رقم الموبايل"
+                            android:hint="رقم الموبايل بدون 0 (7704503245)"
                             android:inputType="numberDecimal" />
 
                     </com.google.android.material.textfield.TextInputLayout>

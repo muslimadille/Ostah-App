@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Ostah App</string>
+    <string name="app_name">أسطة</string>
     <string name="home">الرئيسية</string>
     <string name="login">دخول</string>
     <string name="orders">الطلبات</string>
@@ -41,7 +41,7 @@
     <string name="now">الآن</string>
     <string name="send_order">إرسال الطلب</string>
     <string name="edit">تحديث</string>
-    <string name="direct_order_title">تواصل مع أسطة</string>
+    <string name="direct_order_title">صلح مع أسطة</string>
     <string name="order_state">حالة الطلب</string>
     <string name="recieve_order">إستلام الطلب</string>
     <string name="shpw_order_title">معاينة الطلب</string>

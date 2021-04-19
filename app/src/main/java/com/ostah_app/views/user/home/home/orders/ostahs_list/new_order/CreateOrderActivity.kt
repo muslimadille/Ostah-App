@@ -255,6 +255,7 @@ class CreateOrderActivity : BaseActivity() {
                                     Toast.makeText(this@CreateOrderActivity, "success", Toast.LENGTH_SHORT).show()
 
                                     val intent= Intent(this@CreateOrderActivity, MainActivity::class.java)
+                                    intent.putExtra("navK",1.toInt())
                                     this@CreateOrderActivity.startActivity(intent)
                                 } else {
                                     onObservefaled()

@@ -21,8 +21,12 @@ import com.ostah_app.data.remote.objects.Tickets
 import com.ostah_app.utiles.Q
 import com.ostah_app.views.user.home.MainActivity
 import kotlinx.android.synthetic.main.fragment_orders.*
+import kotlinx.android.synthetic.main.fragment_orders.no_data_lay
+import kotlinx.android.synthetic.main.fragment_orders.profile_lay
 import kotlinx.android.synthetic.main.fragment_orders.user_orders_rv
 import kotlinx.android.synthetic.main.fragment_orders.progrss_lay
+import kotlinx.android.synthetic.main.fragment_orders.visitor_lay
+import kotlinx.android.synthetic.main.fragment_previos.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -51,12 +55,18 @@ class OrdersFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initRVAdapter()
-        if(mContext!!.preferences!!.getInteger(Q.USER_TYPE,0)== Q.TYPE_USER){
-            getUserOrders()
+        if(mContext!!.preferences!!.getString(Q.USER_NAME,"").isNotEmpty()){
+            initRVAdapter()
+            if(mContext!!.preferences!!.getInteger(Q.USER_TYPE,0)== Q.TYPE_USER){
+                getUserOrders()
+            }else{
+                getOstahOrders()
+            }
         }else{
-            getOstahOrders()
+            profile_lay.visibility=View.GONE
+            visitor_lay.visibility=View.VISIBLE
         }
+
     }
     private fun initRVAdapter(){
         val layoutManager = LinearLayoutManager(mContext!!, RecyclerView.VERTICAL, false)
@@ -81,10 +91,17 @@ class OrdersFragment : Fragment() {
                     if (response!!.isSuccessful) {
                         if (response.body()!!.success) {
                             response.body()!!.data!!.tickets.let {
-                                ordersList.addAll(it)
+                                it.forEach {  tiket->
+                                    if(tiket.status_id!=5&&tiket.status_id!=4){
+
+                                        ordersList.add(tiket)
+
+                                    }
+                                }
+
                                 ordersListAddapter!!.notifyDataSetChanged()
                                 onObserveSuccess()
-                                if(it.isEmpty()){
+                                if(ordersList.isEmpty()){
                                     no_data_lay?.visibility=View.VISIBLE
                                     user_orders_rv?.visibility=View.GONE
                                 }else{

@@ -76,7 +76,6 @@ class OstaRecievOrderActivity : BaseActivity() {
         
     }
     private fun initStatusList(){
-        statusList.add("تم استلام الطلب")
         statusList.add("تم تأكيد الطلب")
         statusList.add("الطلب قيد المعالجة")
         statusList.add("تم تنفيذ الطلب")
@@ -93,7 +92,7 @@ class OstaRecievOrderActivity : BaseActivity() {
         order_state_spinner.setSelection(selectedStatus-1)
         order_state_spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
-                    selectedStatus=position+1
+                    selectedStatus=position+2
                 
             }
             override fun onNothingSelected(parent: AdapterView<*>) {

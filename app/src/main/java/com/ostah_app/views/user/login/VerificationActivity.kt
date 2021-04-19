@@ -53,7 +53,7 @@ class VerificationActivity : BaseActivity() {
     }
 
     private fun onResendClicked(){
-        send_message_btn.setOnClickListener {
+        
             onObserveStart()
             apiClient = ApiClient()
             sessionManager = SessionManager(this)
@@ -86,7 +86,7 @@ class VerificationActivity : BaseActivity() {
 
 
                 })
-        }
+
     }
     private fun resendMessage(){
         retry_btn.setOnClickListener {

@@ -24,19 +24,19 @@ import com.google.android.gms.location.*
 import com.ostah_app.R
 import com.ostah_app.data.remote.apiServices.ApiClient
 import com.ostah_app.data.remote.apiServices.SessionManager
-import com.ostah_app.data.remote.objects.BaseResponseModel
-import com.ostah_app.data.remote.objects.OrderTecket
-import com.ostah_app.data.remote.objects.Services
-import com.ostah_app.data.remote.objects.ServicesModel
+import com.ostah_app.data.remote.objects.*
 import com.ostah_app.views.user.base.GlideObject
 import com.ostah_app.views.user.home.MainActivity
+import com.ostah_app.views.user.home.more.ContactUsActivity
 import kotlinx.android.synthetic.main.activity_direct_order.*
+import kotlinx.android.synthetic.main.activity_direct_order.contactus_btn
 import kotlinx.android.synthetic.main.activity_direct_order.profile_lay
 import kotlinx.android.synthetic.main.activity_direct_order.progrss_lay
 import kotlinx.android.synthetic.main.activity_direct_order.save_btn_lay
 import kotlinx.android.synthetic.main.activity_direct_order.sercices_spinner_lay
 import kotlinx.android.synthetic.main.activity_direct_order.service_spinner
 import kotlinx.android.synthetic.main.activity_direct_order.user_img
+import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.activity_osta_profile_details.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -85,17 +85,18 @@ class DirectOrderActivity : BaseActivity() {
         setOstahData()
         onSendClicked()
         pickDate()
+        onContatUs()
 
         onNowChecked()
        if(service_id==0){
            sercices_spinner_lay.visibility=View.VISIBLE
-           map_lay.visibility=View.VISIBLE
+           //map_lay?.visibility=View.VISIBLE
            servicesObserver()
            initSpinner()
            implementListeners()
        }else{
            sercices_spinner_lay.visibility=View.GONE
-           map_lay.visibility=View.GONE
+           //map_lay?.visibility=View.GONE
 
        }
     }
@@ -141,6 +142,7 @@ class DirectOrderActivity : BaseActivity() {
                                         Toast.makeText(this@DirectOrderActivity, "success", Toast.LENGTH_SHORT).show()
 
                                         val intent= Intent(this@DirectOrderActivity, MainActivity::class.java)
+                                        intent.putExtra("navK",1.toInt())
                                         this@DirectOrderActivity.startActivity(intent)
                                     } else {
                                         onObservefaled()
@@ -348,6 +350,50 @@ class DirectOrderActivity : BaseActivity() {
 
                 }
 
+
+            })
+    }
+    private fun onContatUs(){
+        contactus_btn.setOnClickListener {
+            contactUs()
+        }
+    }
+    private fun contactUs() {
+        apiClient = ApiClient()
+        sessionManager = SessionManager(this)
+        apiClient.getApiService(this).getPhoneInfo()
+            .enqueue(object : Callback<BaseResponseModel<AboutUsModel>> {
+                override fun onFailure(call: Call<BaseResponseModel<AboutUsModel>>, t: Throwable) {
+                    // alertNetwork(true)
+                    Toast.makeText(this@DirectOrderActivity, "network error", Toast.LENGTH_SHORT).show()
+                    val intent=Intent(Intent.ACTION_CALL, Uri.parse("tel:"+"${preferences!!.getString("app_phone","")
+                        .replace("+","").toString()}"))
+                    startActivity(intent)
+                }
+
+                override fun onResponse(
+                    call: Call<BaseResponseModel<AboutUsModel>>,
+                    response: Response<BaseResponseModel<AboutUsModel>>
+                ) {
+                    if (response!!.isSuccessful) {
+                        if (response.body()!!.success) {
+                            response.body()!!.data!!.let {
+                                if(it.contact_us.isNotEmpty()){
+                                    preferences!!.putString("app_phone",it.contact_us)
+                                    preferences!!.commit()
+                                    val intent=Intent(this@DirectOrderActivity, ContactUsActivity::class.java)
+                                    startActivity(intent)
+                                }
+                            }
+                        } else {
+                            Toast.makeText(this@DirectOrderActivity, "faid", Toast.LENGTH_SHORT).show()
+                        }
+
+                    } else {
+                        Toast.makeText(this@DirectOrderActivity, "connect faid", Toast.LENGTH_SHORT).show()
+
+                    }
+                }
 
             })
     }

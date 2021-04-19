@@ -34,6 +34,13 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+    sourceSets {
+        main {
+            assets {
+                srcDirs 'src\\main\\assets'
+            }
+        }
+    }
 }
 
 dependencies {
@@ -164,5 +171,6 @@ dependencies {
     //implementation 'com.google.firebase:firebase-messaging:17.0.0'
     implementation platform('com.google.firebase:firebase-bom:26.8.0')
     implementation 'com.google.firebase:firebase-messaging-ktx'
+    implementation "com.airbnb.android:lottie:3.7.0"
 
 }

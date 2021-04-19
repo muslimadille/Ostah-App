@@ -21,6 +21,10 @@ import com.ostah_app.data.remote.objects.Tickets
 import com.ostah_app.utiles.Q
 import com.ostah_app.views.user.home.MainActivity
 import kotlinx.android.synthetic.main.fragment_previos.*
+import kotlinx.android.synthetic.main.fragment_previos.no_data_lay
+import kotlinx.android.synthetic.main.fragment_previos.progrss_lay
+import kotlinx.android.synthetic.main.fragment_previos.user_orders_rv
+import kotlinx.android.synthetic.main.fragment_previos.visitor_lay
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -48,12 +52,21 @@ class PreviosFragment : Fragment() {
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initRVAdapter()
-        if(mContext!!.preferences!!.getInteger(Q.USER_TYPE,0)== Q.TYPE_USER){
-            getUserOrders()
+        if(mContext!!.preferences!!.getString(Q.USER_NAME,"").isNotEmpty()){
+            initRVAdapter()
+            if(mContext!!.preferences!!.getInteger(Q.USER_TYPE,0)== Q.TYPE_USER){
+                getUserOrders()
+            }else{
+                getOstahOrders()
+            }
         }else{
-            getOstahOrders()
+            profile_lay.visibility=View.GONE
+            visitor_lay.visibility=View.VISIBLE
         }
+
+
+
+
 
     }
     private fun initRVAdapter(){

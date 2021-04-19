@@ -30,6 +30,8 @@ object Q {
     const val CHANGE_PASSWORD_USR="user/password/update"
     const val USER_PHONE_UPDATE="user/phonenumber/update"
     const val USER__UPDATET_PHONE_VERIFI="user/phonenumber/verify"
+    const val ORDER_STATES="user/ticket-statuses"
+
 
     /*****************ostah apis*******************************************************/
 

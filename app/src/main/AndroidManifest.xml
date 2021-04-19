@@ -13,15 +13,18 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-feature android:name="android.hardware.location.gps" />
 
     <application
         android:name=".views.user.base.App"
         android:allowBackup="true"
-        android:icon="@mipmap/lancher"
+        android:icon="@drawable/logo2"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/lancher_r"
+        android:roundIcon="@drawable/logo2"
         android:supportsRtl="true"
         android:theme="@style/Theme.OstahApp">
+        <activity android:name=".views.user.home.more.ContactUsActivity"></activity>
+
         <service
             android:name=".data.remote.gcm.MyFirebaseInstanceIDService"
             android:exported="false">
@@ -36,7 +39,8 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-        <activity android:name=".views.user.login.VerificationActivity"></activity>
+
+        <activity android:name=".views.user.login.VerificationActivity" />
         <activity android:name=".views.user.login.SmsVerificationActivity" />
         <activity android:name=".views.user.home.more.InfoActivity" />
         <!--
@@ -54,13 +58,7 @@
         <activity
             android:name=".views.user.home.home.orders.ostahs_list.new_order.MapsActivity"
             android:label="@string/title_activity_maps" />
-        <activity android:name=".views.user.introSlider.IntroWizardActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+        <activity android:name=".views.user.introSlider.IntroWizardActivity"></activity>
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:screenOrientation="portrait"
@@ -82,6 +80,7 @@
         <activity android:name=".views.user.registeration.RegisterationActivity" />
         <activity android:name=".views.user.login.LoginActivity" />
         <activity android:name=".views.user.home.MainActivity" />
+
         <service
             android:name=".data.remote.gcm.MyFirebaseMessagingService"
             android:exported="false">
@@ -89,19 +88,20 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-
-        <!-- Set custom default icon. This is used when no icon is set for incoming notification messages.
-     See README(https://goo.gl/l4GJaQ) for more. -->
+        <!--
+ Set custom default icon. This is used when no icon is set for incoming notification messages.
+     See README(https://goo.gl/l4GJaQ) for more.
+        -->
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
-            android:resource="@drawable/logo" />
-        <!-- Set color used with incoming notification messages. This is used when no color is set for the incoming
-             notification message. See README(https://goo.gl/6BKBk7) for more. -->
+            android:resource="@drawable/logo2" />
+        <!--
+ Set color used with incoming notification messages. This is used when no color is set for the incoming
+             notification message. See README(https://goo.gl/6BKBk7) for more.
+        -->
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/colorAccent" />
-
-
     </application>
 
 </manifest>

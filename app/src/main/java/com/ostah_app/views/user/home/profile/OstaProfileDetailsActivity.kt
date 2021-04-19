@@ -129,10 +129,10 @@ class OstaProfileDetailsActivity : BaseActivity() {
     }
 
     private fun setUserData(userModel: OstahUserModel){
-        currentPhone=userModel.phonenumber
+        currentPhone=userModel.phonenumber.replace("+964","")
         username?.setText(userModel.name)
         email?.setText(userModel.email)
-        phone?.setText(userModel.phonenumber)
+        phone?.setText(currentPhone)
         service_text?.text=userModel.service.name
         selectedServiceId=userModel.service_id
         lat=userModel.lat.toString()
@@ -461,7 +461,7 @@ class OstaProfileDetailsActivity : BaseActivity() {
             apiClient = ApiClient()
             sessionManager = SessionManager(this)
             apiClient.getApiService(this)
-                .updateOstahPhone(phone.text.toString())
+                .updateOstahPhone("+964"+phone.text.toString())
                 .enqueue(object : Callback<BaseResponseModel<Any>> {
                     override fun onFailure(call: Call<BaseResponseModel<Any>>, t: Throwable) {
                         alertNetwork(false)

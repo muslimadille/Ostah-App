@@ -99,6 +99,7 @@ class OstahProfileFragment : Fragment() {
     }
     private fun setUserData(userModel: OstahUserModel){
         osata_name?.setText(userModel.name)
+        osata_department?.setText(userModel.service.name)
         ponas_txt?.text=userModel.bonus.toString()
         rate_txt?.text=userModel.rating.toString()
         done_works_txt?.text=userModel.tickets_success.toString()

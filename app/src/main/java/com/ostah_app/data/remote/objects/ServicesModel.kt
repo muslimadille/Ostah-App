@@ -5,6 +5,8 @@ import com.google.gson.annotations.SerializedName
 data class ServicesModel (
         @SerializedName("services")
         var services:List<Services>,
+        @SerializedName("statuses")
+        var statuses:List<Services>,
 
         )
 data class Services(

@@ -13,7 +13,7 @@
         <ImageView
             android:layout_width="80dp"
             android:layout_height="80dp"
-            android:src="@drawable/logo"
+            android:src="@drawable/logo2"
             />
         <TextView
             android:layout_width="wrap_content"
@@ -71,6 +71,24 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:text="@string/no_data_available"/>
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/visitor_lay"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center">
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginBottom="10dp"
+            android:src="@drawable/ic_base_logout"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="قم بتسجيل حساب لعرض البيانات"/>
     </LinearLayout>
     <include layout="@layout/progress_layout"
         android:id="@+id/progrss_lay"
