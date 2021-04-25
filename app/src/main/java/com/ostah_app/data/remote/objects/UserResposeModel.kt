@@ -27,6 +27,8 @@ data class UserResposeModel (
     var rating: Double,
     @SerializedName("service")
     var service: Services,
+    @SerializedName("distance_user_osta")
+    var distance_user_osta :Double,
 
 )
 data class OstahList(

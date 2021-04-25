@@ -77,6 +77,7 @@ class HomeFragment : Fragment() {
         if (mContext!!.preferences!!.getString(Q.USER_NAME,"").isEmpty()){
             contact_ostah_lay.visibility=View.GONE
             refresh_lay.visibility=View.VISIBLE
+
         }
     }
     private fun getOstahOrders() {
@@ -166,8 +167,11 @@ class HomeFragment : Fragment() {
                                         servicesList.addAll(it.services)
                                         servicesAddapter!!.notifyDataSetChanged()
                                         onObserveSuccess()
-                                        contact_ostah_lay?.visibility=View.VISIBLE
-                                        refresh_lay.visibility=View.GONE
+                                        if (mContext!!.preferences!!.getString(Q.USER_NAME,"").isNotEmpty()){
+                                            contact_ostah_lay?.visibility=View.VISIBLE
+
+                                        }
+                                        refresh_lay?.visibility=View.GONE
 
                                     } else {
                                         onObservefaled()
@@ -378,7 +382,9 @@ class HomeFragment : Fragment() {
 
 
     private fun OnDirectOrderClicked(){
-
+        if(mContext!!.preferences!!.getString(Q.USER_NAME,"").isEmpty()){
+            contact_ostah_lay.visibility=View.GONE
+        }
         contact_ostah_lay.setOnClickListener {
             val intent= Intent(mContext, MapsActivity::class.java)
             intent.putExtra("service_id",0)
@@ -391,7 +397,8 @@ class HomeFragment : Fragment() {
     @RequiresApi(Build.VERSION_CODES.M)
     private fun refresh(){
         refresh_btn.setOnClickListener {
-            userCheck()
+            sliderImagesObserver()
+            offersObserver()
         }
     }
 }

@@ -33,6 +33,8 @@ data class OstahUserModel (
     var tickets_cancel:Int,
     @SerializedName("rating")
     var rating:Int,
+    @SerializedName("distance_user_osta")
+    var distance_user_osta :Double,
 
 
 

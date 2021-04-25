@@ -40,9 +40,12 @@ class UserOrdersAdapter(
 
 
 
-           holder.normal_btn_lay.visibility=View.VISIBLE
 
-           if (order.reformer != null) holder.order_osta_name.text = order.reformer.name
+
+        if(mContext!!.preferences!!.getInteger(Q.USER_TYPE,0)==Q.TYPE_USER){
+            holder.normal_btn_lay.visibility=View.VISIBLE
+
+            if (order.reformer != null) holder.order_osta_name.text = order.reformer.name
             order.service.name.let { holder.department_txt.text = it }
             order.title.let { holder.subject_txt.text = it }
             if (order.reformer != null) GlideObject.GlideProfilePic(
@@ -50,15 +53,37 @@ class UserOrdersAdapter(
                 order.reformer.image,
                 holder.order_user_img
             )
+        }else{
+            holder.normal_btn_lay.visibility=View.VISIBLE
+            holder.order_osta_name.text = order.user.name
+            order.service.name.let { holder.department_txt.text = it }
+            order.title.let { holder.subject_txt.text = it }
+            GlideObject.GlideProfilePic(
+                mContext,
+                order.user.image,
+                holder.order_user_img
+            )
+        }
 
             holder.edit_order_btn.setOnClickListener {
+                if(mContext!!.preferences!!.getInteger(Q.USER_TYPE,0)!=Q.TYPE_USER){
+                    val intent = Intent(mContext, OstaRecievOrderActivity::class.java)
+                    intent.putExtra("status", order.status_id.toInt())
+                    intent.putExtra("id", order.id.toInt())
+                    intent.putExtra("details", order.details)
+                    intent.putExtra("comment", order.title)
+                    intent.putExtra("image", order.user.image)
+                    intent.putExtra("name", order.user.name)
+                    intent.putExtra("lat",order.lat.toString())
+                    intent.putExtra("lng",order.lng.toString())
+                    mContext.startActivity(intent)
+                }else{
+                    val intent = Intent(mContext, OrderStateActivity::class.java)
+                    intent.putExtra("status", order.status_id.toInt())
+                    intent.putExtra("id", order.id.toInt())
+                    mContext.startActivity(intent)
+                }
 
-            }
-            holder.order_lay.setOnClickListener {
-                val intent = Intent(mContext, OrderStateActivity::class.java)
-                intent.putExtra("status", order.status_id.toInt())
-                intent.putExtra("id", order.id.toInt())
-                mContext.startActivity(intent)
             }
 
 

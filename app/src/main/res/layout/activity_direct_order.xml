@@ -66,6 +66,7 @@
                 android:orientation="horizontal">
 
                 <TextView
+                    android:visibility="gone"
                     android:id="@+id/ostah_name_txt"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -77,6 +78,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/user_img" />
 
                 <de.hdodenhof.circleimageview.CircleImageView
+                    android:visibility="gone"
                     android:id="@+id/user_img"
                     android:layout_width="80dp"
                     android:layout_height="80dp"
@@ -113,6 +115,9 @@
                         android:layout_margin="5dp"/>
 
                     <Spinner
+                        android:paddingTop="15dp"
+                        android:paddingBottom="15dp"
+                        android:background="@drawable/previous_order_item_bg"
                         android:id="@+id/service_spinner"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"/>
@@ -309,5 +314,20 @@
         android:textStyle="bold"
         android:gravity="center"
         android:layout_marginBottom="20dp"/>
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNavigationView"
+        app:labelVisibilityMode="unlabeled"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="0dp"
+        android:layout_marginEnd="0dp"
+        app:itemRippleColor="@color/white"
+        app:itemIconTint="@color/white"
+        app:itemTextColor="@color/white"
+        app:backgroundTint="@color/base"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:menu="@menu/navigation" />
 
 </LinearLayout>

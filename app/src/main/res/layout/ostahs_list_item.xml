@@ -30,17 +30,62 @@
                     app:civ_border_width="2dp"
                     android:layout_margin="10dp"
                     />
-                <TextView
-                    android:id="@+id/order_osta_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:text="..........."
-                    android:textSize="14sp"
-                    android:gravity="center_vertical"
-                    android:layout_marginBottom="10dp"/>
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+                    <TextView
+                        android:textStyle="bold"
+                        android:id="@+id/order_osta_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="..........."
+                        android:textSize="14sp"
+                        android:gravity="center_vertical"
+                        />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:textSize="12sp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="القسم: "
+                            android:textStyle="bold"/>
+                        <TextView
+                            android:textSize="12sp"
+
+                            android:id="@+id/department_txt"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="............"
+                            />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:textSize="12sp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="المسافة: "
+                            android:textStyle="bold"/>
+                        <TextView
+                            android:textSize="12sp"
+                            android:id="@+id/distance_txt"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="........."
+                            />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
                     android:gravity="end"
                     android:layout_height="match_parent">
                     <RatingBar

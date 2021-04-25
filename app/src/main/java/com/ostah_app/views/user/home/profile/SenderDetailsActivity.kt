@@ -3,19 +3,30 @@ import BaseActivity
 import android.content.DialogInterface
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.bottomnavigation.LabelVisibilityMode
 import com.ostah_app.R
 import com.ostah_app.data.remote.apiServices.ApiClient
 import com.ostah_app.data.remote.apiServices.SessionManager
 import com.ostah_app.data.remote.objects.BaseResponseModel
 import com.ostah_app.data.remote.objects.NormalUserModel
 import com.ostah_app.utiles.Q
+import com.ostah_app.views.user.home.MainActivity
+import kotlinx.android.synthetic.main.activity_create_order.*
 import kotlinx.android.synthetic.main.activity_sender_details.*
+import kotlinx.android.synthetic.main.activity_sender_details.bottomNavigationView
+import kotlinx.android.synthetic.main.activity_sender_details.osata_name
+import kotlinx.android.synthetic.main.activity_sender_details.profile_lay
+import kotlinx.android.synthetic.main.activity_sender_details.progrss_lay
+import kotlinx.android.synthetic.main.activity_sender_details.user_img
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -27,6 +38,7 @@ class SenderDetailsActivity : BaseActivity() {
     var lng=""
     private lateinit var sessionManager: SessionManager
     private lateinit var apiClient: ApiClient
+    @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sender_details)
@@ -36,6 +48,7 @@ class SenderDetailsActivity : BaseActivity() {
         getUserData()
         onBackClicked()
         navToMap()
+        initBottomNavigation()
     }
     private fun onBackClicked(){
         back_btn.setOnClickListener {
@@ -148,5 +161,42 @@ class SenderDetailsActivity : BaseActivity() {
                 startActivity(intent)
             }
         }
+    }
+    @RequiresApi(Build.VERSION_CODES.M)
+    private fun initBottomNavigation(){
+
+        val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.navigation_home -> {
+                    intent= Intent(this, MainActivity::class.java)
+                    intent.putExtra("navK",0)
+                    startActivity(intent)
+                }
+                R.id.navigation_orders -> {
+                    intent= Intent(this, MainActivity::class.java)
+                    intent.putExtra("navK",1)
+                    startActivity(intent)
+                }
+                R.id.navigation_previous -> {
+                    intent= Intent(this, MainActivity::class.java)
+                    intent.putExtra("navK",2)
+                    startActivity(intent)
+                }
+                R.id.navigation_profile->{
+                    intent= Intent(this, MainActivity::class.java)
+                    intent.putExtra("navK",3)
+                    startActivity(intent)
+                }
+                R.id.navigation_extras->{
+                    intent= Intent(this, MainActivity::class.java)
+                    intent.putExtra("navK",4)
+                    startActivity(intent)
+                }
+            }
+            false
+        }
+        bottomNavigationView.labelVisibilityMode= LabelVisibilityMode.LABEL_VISIBILITY_LABELED
+        bottomNavigationView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
+
     }
 }

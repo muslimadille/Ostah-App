@@ -5,12 +5,22 @@ import SpinnerAdapterCustomFont
 import android.app.Activity
 import android.content.DialogInterface
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.location.Location
 import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
 import android.widget.RadioButton
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.core.app.ActivityCompat
+import com.google.android.gms.common.api.GoogleApiClient
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationListener
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.SupportMapFragment
 import com.ostah_app.R
 import com.ostah_app.data.remote.apiServices.ApiClient
 import com.ostah_app.data.remote.apiServices.SessionManager
@@ -30,16 +40,26 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.util.ArrayList
 
-class RegisterationActivity : BaseActivity() {
+class RegisterationActivity : BaseActivity(), OnMapReadyCallback, LocationListener{
     private val SECOND_ACTIVITY_REQUEST_CODE = 0
     private var isValid=true
     private var userType=0
     private var gendarType=0
     private var termsState=0
     private var selectedServiceId=0
+    private var selectedaria=0
+    var fusedLocationProviderClient: FusedLocationProviderClient?=null
+    internal lateinit var mLastLocation: Location
+
+
+
+
     private var servicesNamesList = ArrayList<String>()
+    private var araiList = ArrayList<String>()
     private var servicesList = ArrayList<Services>()
     private lateinit var servicesSpinnerAdapter: SpinnerAdapterCustomFont
+    private lateinit var ariaSpinnerAdapter: SpinnerAdapterCustomFont
+
     private var lat=""
     private var lng=""
 
@@ -51,6 +71,8 @@ class RegisterationActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_registeration)
+        fusedLocationProviderClient= LocationServices.getFusedLocationProviderClient(this)
+        initAriaList()
         initSpinner()
         servicesObserver()
         implementListeners()
@@ -59,6 +81,8 @@ class RegisterationActivity : BaseActivity() {
         terms()
         onStratClicked()
         onSelectLocatinoClicked()
+        fetchLocation()
+
     }
     private fun onStratClicked(){
         Login_btn.setOnClickListener {
@@ -136,6 +160,10 @@ class RegisterationActivity : BaseActivity() {
             //isValid=false
             Toast.makeText(this, "قم بتحديد الموقع", Toast.LENGTH_SHORT).show()
         }
+        else if(selectedaria ==0&&userType==2){
+            //isValid=false
+            Toast.makeText(this, "قم بتحديد حيز تنفيذ الخدمة", Toast.LENGTH_SHORT).show()
+        }
         else {
             register()
         }
@@ -156,11 +184,14 @@ class RegisterationActivity : BaseActivity() {
                 userType = 1
                 ostaBtn.isChecked = false
                 select_service_lay.visibility=View.GONE
+                aria_lay.visibility=View.GONE
                 map_lay.visibility=View.GONE
             } else if (ostaBtn.isChecked) {
                 userType = 2
                 userBtn.isChecked = false
                 select_service_lay.visibility=View.VISIBLE
+                aria_lay.visibility=View.VISIBLE
+
                 map_lay.visibility=View.GONE
             }
         }
@@ -172,13 +203,17 @@ class RegisterationActivity : BaseActivity() {
                 userType = 1
                 ostaBtn.isChecked = false
                 select_service_lay.visibility=View.GONE
+                aria_lay.visibility=View.GONE
+
                 map_lay.visibility=View.GONE
 
             } else if (ostaBtn.isChecked) {
                 userType = 2
                 userBtn.isChecked = false
                 select_service_lay.visibility=View.VISIBLE
-                map_lay.visibility=View.VISIBLE
+                aria_lay.visibility=View.VISIBLE
+
+                map_lay.visibility=View.GONE
 
             }
         }
@@ -236,7 +271,7 @@ class RegisterationActivity : BaseActivity() {
         onObserveStart()
         apiClient = ApiClient()
         sessionManager = SessionManager(this)
-        apiClient.getApiService(this).userRegister(name_txt.text.toString(),email_txt.text.toString(),userType,"+964"+(phone_txt.text.toString()),gendarType,selectedServiceId,0,lat,lng,pass_txt.text.toString(),con_pass_txt.text.toString(),1,devicToken)
+        apiClient.getApiService(this).userRegister(name_txt.text.toString(),email_txt.text.toString(),userType,"+964"+(phone_txt.text.toString()),gendarType,selectedServiceId,selectedaria,lat,lng,pass_txt.text.toString(),con_pass_txt.text.toString(),1,devicToken)
             .enqueue(object : Callback<BaseResponseModel<LoginResponseModel>> {
                 override fun onFailure(call: Call<BaseResponseModel<LoginResponseModel>>, t: Throwable) {
                     alertNetwork(false)
@@ -258,7 +293,7 @@ class RegisterationActivity : BaseActivity() {
                                         )
                                     intent.putExtra("phone", it.user.phonenumber.toString())
                                     intent.putExtra("type",user)
-                                    intent.putExtra("email", email_txt.text.toString())
+                                    intent.putExtra("email", name_txt.text.toString())
                                     intent.putExtra("password", pass_txt.text.toString())
                                     startActivity(intent)
                                     Toast.makeText(this@RegisterationActivity, "success", Toast.LENGTH_SHORT).show()
@@ -267,7 +302,15 @@ class RegisterationActivity : BaseActivity() {
                             }
                         } else {
                             onObservefaled()
-                            Toast.makeText(this@RegisterationActivity, response.body()!!.message.toString(), Toast.LENGTH_SHORT).show()
+                            if(response.body()!!.message.toString().contains("The phonenumber has already been taken")){
+                                Toast.makeText(this@RegisterationActivity,"رقم الموبايل مستخدم من قبل", Toast.LENGTH_SHORT).show()
+
+                            }else if(response.body()!!.message.toString().contains("The name has")){
+                                Toast.makeText(this@RegisterationActivity," اسم المستخدم مستخدم من قبل", Toast.LENGTH_SHORT).show()
+
+                            }else{
+                                Toast.makeText(this@RegisterationActivity, response.body()!!.message.toString(), Toast.LENGTH_SHORT).show()
+                            }
 
 
                         }
@@ -324,6 +367,11 @@ class RegisterationActivity : BaseActivity() {
         servicesSpinnerAdapter.add("إختر نوع الخدمة")
         servicesSpinnerAdapter.textSize = 14
         service_spinner.adapter = servicesSpinnerAdapter
+
+        ariaSpinnerAdapter = SpinnerAdapterCustomFont(this, android.R.layout.simple_spinner_item, araiList)
+        ariaSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        ariaSpinnerAdapter.textSize = 14
+        aria_spinner.adapter = ariaSpinnerAdapter
     }
     private fun implementListeners() {
 
@@ -331,6 +379,16 @@ class RegisterationActivity : BaseActivity() {
             override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
                 if(servicesList.isNotEmpty()&&position!=0){
                     selectedServiceId=servicesList[position-1].id
+                }
+
+            }
+            override fun onNothingSelected(parent: AdapterView<*>) {
+            }
+        }
+        aria_spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+                if(true){
+                    selectedaria=ariaNums()[position]
                 }
 
             }
@@ -367,6 +425,55 @@ class RegisterationActivity : BaseActivity() {
 
             }
         }
+    }
+    private fun initAriaList(){
+        araiList.add("حيز تقديم الخدمة")
+        araiList.add("1 كيلو")
+        araiList.add("2 كيلو")
+        araiList.add("5 كيلو")
+        araiList.add("10 كيلو")
+        araiList.add("15 كيلو")
+        araiList.add("20 كيلو")
+
+    }
+    private fun ariaNums():List<Int>{
+         var numsList = ArrayList<Int>()
+        numsList.add(0)
+        numsList.add(1)
+        numsList.add(2)
+        numsList.add(5)
+        numsList.add(10)
+        numsList.add(15)
+        numsList.add(20)
+
+        return numsList
+    }
+    private fun fetchLocation(){
+        if(ActivityCompat.checkSelfPermission(this,android.Manifest.permission.ACCESS_FINE_LOCATION)!= PackageManager.PERMISSION_GRANTED
+            && ActivityCompat.checkSelfPermission(this,android.Manifest.permission.ACCESS_COARSE_LOCATION)!= PackageManager.PERMISSION_GRANTED){
+
+            ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION),1000)
+            return
+        }
+        val task=fusedLocationProviderClient?.lastLocation
+        task?.addOnSuccessListener { location->
+            if(location!=null){
+                this.mLastLocation=location
+                lat=mLastLocation.latitude.toString()
+                lng=mLastLocation.longitude.toString()
+
+            }
+        }
+    }
+
+    override fun onMapReady(p0: GoogleMap?) {
+    }
+
+    override fun onLocationChanged(p0: Location) {
+        mLastLocation = p0
+        lat=mLastLocation.latitude.toString()
+        lng=mLastLocation.longitude.toString()
+
     }
 }
 

@@ -92,8 +92,7 @@ class OrdersFragment : Fragment() {
                         if (response.body()!!.success) {
                             response.body()!!.data!!.tickets.let {
                                 it.forEach {  tiket->
-                                    if(tiket.status_id!=5&&tiket.status_id!=4){
-
+                                    if(tiket.status_id!=5){
                                         ordersList.add(tiket)
 
                                     }
@@ -143,10 +142,15 @@ class OrdersFragment : Fragment() {
                     if (response!!.isSuccessful) {
                         if (response.body()!!.success) {
                             response.body()!!.data!!.let {
-                                ordersList.addAll(it)
+                                it.forEach { ticket->
+                                    if(ticket.status_id!=4&&ticket.status_id!=5){
+                                        ordersList.add(ticket)
+                                    }
+                                }
                                 ordersListAddapter!!.notifyDataSetChanged()
+
                                 onObserveSuccess()
-                                if(it.isEmpty()){
+                                if(ordersList.isEmpty()){
                                     no_data_lay?.visibility=View.VISIBLE
                                     user_orders_rv?.visibility=View.GONE
                                 }else{

@@ -1,6 +1,8 @@
 package com.ostah_app.views.user.login
 
 import BaseActivity
+import android.app.NotificationManager
+import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.net.Uri
@@ -8,6 +10,8 @@ import android.os.Bundle
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
+import com.google.firebase.iid.FirebaseInstanceId
+import com.google.firebase.messaging.FirebaseMessaging
 import com.ostah_app.R
 import com.ostah_app.data.remote.apiServices.ApiClient
 import com.ostah_app.data.remote.apiServices.SessionManager
@@ -18,6 +22,7 @@ import com.ostah_app.utiles.Q
 import com.ostah_app.views.user.home.MainActivity
 import com.ostah_app.views.user.home.more.ContactUsActivity
 import com.ostah_app.views.user.registeration.RegisterationActivity
+import com.ostah_app.views.user.splash.SplashActivity
 import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.activity_sms_verification.*
 import retrofit2.Call
@@ -100,10 +105,7 @@ class LoginActivity : BaseActivity() {
                                         Q.USER_NAME,
                                         loginResponse!!.data!!.user.name
                                     )
-                                    preferences!!.putString(
-                                        Q.USER_EMAIL,
-                                        loginResponse!!.data!!.user.email
-                                    )
+
                                     preferences!!.putString(
                                         Q.USER_PHONE,
                                         loginResponse!!.data!!.user.phonenumber.toString()
@@ -237,6 +239,15 @@ class LoginActivity : BaseActivity() {
     }
     private fun onVisitorClicked(){
         visitor_btn.setOnClickListener {
+
+            this.preferences!!.putBoolean(Q.IS_FIRST_TIME,true)
+            this.preferences!!.putBoolean(Q.IS_LOGIN,false)
+            this.preferences!!.putInteger(Q.USER_ID,-1)
+            this.preferences!!.putString(Q.USER_NAME,"")
+            this.preferences!!.putString(Q.USER_EMAIL,"")
+            this.preferences!!.putString(Q.USER_PHONE,"")
+            this.preferences!!.putInteger(Q.USER_GENDER,-1)
+            this.preferences!!.commit()
             preferences!!.putInteger(Q.USER_TYPE, 1)
             preferences!!.commit()
             val intent =
@@ -245,6 +256,7 @@ class LoginActivity : BaseActivity() {
             finish()
         }
     }
+
     private fun onContatUs(){
         contactus_btn.setOnClickListener {
             contactUs()

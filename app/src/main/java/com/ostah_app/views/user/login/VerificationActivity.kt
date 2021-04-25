@@ -106,7 +106,7 @@ class VerificationActivity : BaseActivity() {
         alertBuilder.show()
     }
     private  fun sendNumber(){
-        if (message_tf.text.isNotEmpty()){
+        if (message_tf.text.toString().isNotEmpty()){
             onObserveStart()
             apiClient = ApiClient()
             sessionManager = SessionManager(this)
@@ -123,7 +123,7 @@ class VerificationActivity : BaseActivity() {
                         val registerResponse = response.body()
                         if (response.code() != 500 && registerResponse!!.success) {
                             if (registerResponse.message.toString()
-                                    .contains("{success=not verified}")
+                                    .contains("not verified")
                             ) {
                                 onObserveSuccess()
                                 Toast.makeText(this@VerificationActivity, "تأكد من إدخال كود صحيح", Toast.LENGTH_SHORT).show()
@@ -202,10 +202,7 @@ class VerificationActivity : BaseActivity() {
                                     Q.USER_NAME,
                                     loginResponse!!.data!!.user.name
                                 )
-                                preferences!!.putString(
-                                    Q.USER_EMAIL,
-                                    loginResponse!!.data!!.user.email
-                                )
+
                                 preferences!!.putString(
                                     Q.USER_PHONE,
                                     loginResponse!!.data!!.user.phonenumber.toString()

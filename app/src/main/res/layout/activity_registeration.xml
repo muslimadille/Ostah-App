@@ -17,7 +17,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:text="تسجيل الدخول"
+            android:text="تسجيل "
             android:textColor="@color/white"
             android:textSize="18sp"
             android:textStyle="bold"
@@ -157,7 +157,7 @@
                             android:layout_centerVertical="true"
                             android:backgroundTint="@color/white"
                             android:ems="10"
-                            android:hint="البريد الإلكترونى"
+                            android:hint="البريد الإلكترونى(إختياري)"
                             android:inputType="text" />
 
                     </com.google.android.material.textfield.TextInputLayout>
@@ -249,6 +249,29 @@
                         android:src="@drawable/service_type_ic"/>
                     <Spinner
                         android:id="@+id/service_spinner"
+                        android:layout_margin="10dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+
+
+                </LinearLayout>
+                <LinearLayout
+                    android:visibility="gone"
+                    android:id="@+id/aria_lay"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:orientation="horizontal">
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:layout_width="24dp"
+                        app:civ_border_width="5dp"
+                        app:civ_border_color="@color/base"
+                        app:civ_circle_background_color="@color/base"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/ic_aria_white"/>
+                    <Spinner
+                        android:id="@+id/aria_spinner"
                         android:layout_margin="10dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"/>

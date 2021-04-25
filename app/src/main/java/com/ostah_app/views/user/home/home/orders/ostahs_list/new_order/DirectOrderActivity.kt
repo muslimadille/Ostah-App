@@ -21,6 +21,8 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import com.google.android.gms.location.*
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.bottomnavigation.LabelVisibilityMode
 import com.ostah_app.R
 import com.ostah_app.data.remote.apiServices.ApiClient
 import com.ostah_app.data.remote.apiServices.SessionManager
@@ -30,6 +32,15 @@ import com.ostah_app.views.user.home.MainActivity
 import com.ostah_app.views.user.home.more.ContactUsActivity
 import kotlinx.android.synthetic.main.activity_direct_order.*
 import kotlinx.android.synthetic.main.activity_direct_order.contactus_btn
+import kotlinx.android.synthetic.main.activity_direct_order.date_header
+import kotlinx.android.synthetic.main.activity_direct_order.date_picker_btn
+import kotlinx.android.synthetic.main.activity_direct_order.date_txt
+import kotlinx.android.synthetic.main.activity_direct_order.description_header
+import kotlinx.android.synthetic.main.activity_direct_order.description_txt
+import kotlinx.android.synthetic.main.activity_direct_order.isNow_cb
+import kotlinx.android.synthetic.main.activity_direct_order.order_title_header
+import kotlinx.android.synthetic.main.activity_direct_order.order_title_txt
+import kotlinx.android.synthetic.main.activity_direct_order.ostah_name_txt
 import kotlinx.android.synthetic.main.activity_direct_order.profile_lay
 import kotlinx.android.synthetic.main.activity_direct_order.progrss_lay
 import kotlinx.android.synthetic.main.activity_direct_order.save_btn_lay
@@ -37,10 +48,11 @@ import kotlinx.android.synthetic.main.activity_direct_order.sercices_spinner_lay
 import kotlinx.android.synthetic.main.activity_direct_order.service_spinner
 import kotlinx.android.synthetic.main.activity_direct_order.user_img
 import kotlinx.android.synthetic.main.activity_login.*
-import kotlinx.android.synthetic.main.activity_osta_profile_details.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.*
 
 class DirectOrderActivity : BaseActivity() {
@@ -86,6 +98,7 @@ class DirectOrderActivity : BaseActivity() {
         onSendClicked()
         pickDate()
         onContatUs()
+        initBottomNavigation()
 
         onNowChecked()
        if(service_id==0){
@@ -120,7 +133,9 @@ class DirectOrderActivity : BaseActivity() {
 
 
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun creatNewOrder(){
+        if(isNow==1){date=getCurrnetDate()}
         onObserveStart()
         apiClient = ApiClient()
         sessionManager = SessionManager(this)
@@ -139,7 +154,7 @@ class DirectOrderActivity : BaseActivity() {
                                 response.body()!!.data!!.let {
                                     if (it!=null) {
                                         onObserveSuccess()
-                                        Toast.makeText(this@DirectOrderActivity, "success", Toast.LENGTH_SHORT).show()
+                                        Toast.makeText(this@DirectOrderActivity, "تم إرسال طلبك بنجاح", Toast.LENGTH_SHORT).show()
 
                                         val intent= Intent(this@DirectOrderActivity, MainActivity::class.java)
                                         intent.putExtra("navK",1.toInt())
@@ -195,6 +210,7 @@ class DirectOrderActivity : BaseActivity() {
             it.visibility= View.VISIBLE
         }
     }
+    @RequiresApi(Build.VERSION_CODES.O)
     fun alertNetwork(isExit: Boolean = true) {
         val alertBuilder = AlertDialog.Builder(this)
         //alertBuilder.setTitle(R.string.error)
@@ -219,7 +235,7 @@ class DirectOrderActivity : BaseActivity() {
             order_title_header.setTextColor(getColor(R.color.red))
             Toast.makeText(this, "أدخل جميع البيانات", Toast.LENGTH_SHORT).show()
         }
-        if(date_txt.text.isNotEmpty()){
+        if(date_txt.text.isNotEmpty()||isNow==1){
             date=date_txt.text.toString()
             date_header.setTextColor(getColor(R.color.gray))
 
@@ -234,8 +250,21 @@ class DirectOrderActivity : BaseActivity() {
             description_header.setTextColor(getColor(R.color.red))
             Toast.makeText(this, "أدخل جميع البيانات", Toast.LENGTH_SHORT).show()}
 
-        if(title.isNotEmpty()&&decription.isNotEmpty()&&date.isNotEmpty()){
-            creatNewOrder()
+        if(title.isNotEmpty()&&decription.isNotEmpty()){
+                if(isNow==1){
+                    date=getCurrnetDate()
+                    creatNewOrder()
+
+                }else{
+                    if(date.isEmpty()){
+                        Toast.makeText(this, "أدخل جميع البيانات", Toast.LENGTH_SHORT).show()
+
+                    }else{
+                        creatNewOrder()
+                    }
+            }
+
+
         }
     }
     private fun pickDate(){
@@ -311,6 +340,7 @@ class DirectOrderActivity : BaseActivity() {
         sessionManager = SessionManager(this)
         apiClient.getApiService(this).getAllServices()
             .enqueue(object : Callback<BaseResponseModel<ServicesModel>> {
+                @RequiresApi(Build.VERSION_CODES.O)
                 override fun onFailure(call: Call<BaseResponseModel<ServicesModel>>, t: Throwable) {
                     alertNetwork(false)
                 }
@@ -396,5 +426,47 @@ class DirectOrderActivity : BaseActivity() {
                 }
 
             })
+    }
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun getCurrnetDate():String{
+        val currentDateTime= LocalDateTime.now()
+        return currentDateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")).toString()
+
+    }
+    @RequiresApi(Build.VERSION_CODES.M)
+    private fun initBottomNavigation(){
+        val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.navigation_home -> {
+                    intent= Intent(this, MainActivity::class.java)
+                    intent.putExtra("navK",0)
+                    startActivity(intent)
+                }
+                R.id.navigation_orders -> {
+                    intent= Intent(this, MainActivity::class.java)
+                    intent.putExtra("navK",1)
+                    startActivity(intent)
+                }
+                R.id.navigation_previous -> {
+                    intent= Intent(this, MainActivity::class.java)
+                    intent.putExtra("navK",2)
+                    startActivity(intent)
+                }
+                R.id.navigation_profile->{
+                    intent= Intent(this, MainActivity::class.java)
+                    intent.putExtra("navK",3)
+                    startActivity(intent)
+                }
+                R.id.navigation_extras->{
+                    intent= Intent(this, MainActivity::class.java)
+                    intent.putExtra("navK",4)
+                    startActivity(intent)
+                }
+            }
+            false
+        }
+        bottomNavigationView.labelVisibilityMode= LabelVisibilityMode.LABEL_VISIBILITY_LABELED
+        bottomNavigationView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
+
     }
 }

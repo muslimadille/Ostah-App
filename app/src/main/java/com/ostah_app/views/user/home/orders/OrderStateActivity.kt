@@ -11,13 +11,17 @@ import android.widget.RatingBar
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.bottomnavigation.LabelVisibilityMode
 import com.ostah_app.R
 import com.ostah_app.data.remote.apiServices.ApiClient
 import com.ostah_app.data.remote.apiServices.SessionManager
 import com.ostah_app.data.remote.objects.*
 import com.ostah_app.utiles.Q
 import com.ostah_app.views.user.home.MainActivity
+import kotlinx.android.synthetic.main.activity_create_order.*
 import kotlinx.android.synthetic.main.activity_order_state.*
+import kotlinx.android.synthetic.main.activity_order_state.bottomNavigationView
 import kotlinx.android.synthetic.main.activity_order_state.progrss_lay
 import retrofit2.Call
 import retrofit2.Callback
@@ -42,6 +46,7 @@ class OrderStateActivity : BaseActivity() {
         onShowRateClicked()
         getOrderStatus()
         refresh()
+        initBottomNavigation()
 
 
 
@@ -68,7 +73,7 @@ class OrderStateActivity : BaseActivity() {
     }
     private fun onShowRateClicked() {
         show_rate_view_btn.setOnClickListener {
-            if(status==3){
+            if(status==4){
                 order_status_view.visibility=View.GONE
                 order_rate_view.visibility=View.VISIBLE
                 refresh_lay.visibility=View.GONE
@@ -95,10 +100,10 @@ class OrderStateActivity : BaseActivity() {
                     if (response!!.isSuccessful) {
                         if (response.body()!!.success) {
                             response.body()!!.data!!.let {
-                                status=it.ticket.status_id
+                                  status=it.ticket.status_id
                                 setStatus()
                                 onObserveSuccess()
-                                Toast.makeText(this@OrderStateActivity, "تم إلغاء الطلب ", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(this@OrderStateActivity, "تم إلغاء طلبك ", Toast.LENGTH_SHORT).show()
                                 val intent= Intent(this@OrderStateActivity,MainActivity::class.java)
                                 intent.putExtra("navK",1.toInt())
                                 startActivity(intent)
@@ -123,7 +128,7 @@ class OrderStateActivity : BaseActivity() {
     @RequiresApi(Build.VERSION_CODES.M)
     private fun onDoneOrderClicked(){
         done_order_btn.setOnClickListener {
-            if(status==3){
+            if(status==4){
                 if(rating_price.text.isNotEmpty()&&order_rate_comment.text.isNotEmpty()){
                     doneOrder()
                 }else{
@@ -159,7 +164,7 @@ class OrderStateActivity : BaseActivity() {
                                     status=it.ticket.status_id
                                     setStatus()
                                     onObserveSuccess()
-                                    Toast.makeText(this@OrderStateActivity, "تم تنفيذ الطلب بنجاح", Toast.LENGTH_SHORT).show()
+                                    Toast.makeText(this@OrderStateActivity, "تم تنفيذ طلبك بنجاح", Toast.LENGTH_SHORT).show()
                                     order_status_view.visibility=View.VISIBLE
                                     order_rate_view.visibility=View.GONE
                                     refresh_lay.visibility=View.VISIBLE
@@ -255,11 +260,26 @@ class OrderStateActivity : BaseActivity() {
                                 onObserveSuccess()
                                 it.statuses.forEach { statuses->
                                     when(statuses.id){
-                                        1->{order_recieved_indecator.setImageResource(R.drawable.ic_base_true)}
-                                        2->{order_aproved_indecator.setImageResource(R.drawable.ic_base_true)}
-                                        3->{order_inprogres_indecator.setImageResource(R.drawable.ic_base_true)}
-                                        4->{order_done_indecator.setImageResource(R.drawable.ic_base_true)}
-                                        5->{order_deleted_indecator.setImageResource(R.drawable.ic_red_true)}
+                                        1->{
+                                            order_recieved_indecator.setImageResource(R.drawable.ic_base_true)
+                                            status=statuses.id
+                                        }
+                                        2->{
+                                            order_aproved_indecator.setImageResource(R.drawable.ic_base_true)
+                                            status=statuses.id
+                                        }
+                                        3->{
+                                            order_inprogres_indecator.setImageResource(R.drawable.ic_base_true)
+                                            status=statuses.id
+                                        }
+                                        4->{
+                                            order_done_indecator.setImageResource(R.drawable.ic_base_true)
+                                            status=statuses.id
+                                        }
+                                        5->{
+                                            order_deleted_indecator.setImageResource(R.drawable.ic_red_true)
+                                            status=statuses.id
+                                        }
                                     }
                                 }
                             }
@@ -268,7 +288,6 @@ class OrderStateActivity : BaseActivity() {
                             Toast.makeText(this@OrderStateActivity, "faid", Toast.LENGTH_SHORT).show()
 
                         }
-
                     } else {
                         onObservefaled()
                         Toast.makeText(this@OrderStateActivity, "connect faid", Toast.LENGTH_SHORT).show()
@@ -280,5 +299,41 @@ class OrderStateActivity : BaseActivity() {
 
             })
     }
+    @RequiresApi(Build.VERSION_CODES.M)
+    private fun initBottomNavigation(){
 
+        val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.navigation_home -> {
+                    intent= Intent(this, MainActivity::class.java)
+                    intent.putExtra("navK",0)
+                    startActivity(intent)
+                }
+                R.id.navigation_orders -> {
+                    intent= Intent(this, MainActivity::class.java)
+                    intent.putExtra("navK",1)
+                    startActivity(intent)
+                }
+                R.id.navigation_previous -> {
+                    intent= Intent(this, MainActivity::class.java)
+                    intent.putExtra("navK",2)
+                    startActivity(intent)
+                }
+                R.id.navigation_profile->{
+                    intent= Intent(this, MainActivity::class.java)
+                    intent.putExtra("navK",3)
+                    startActivity(intent)
+                }
+                R.id.navigation_extras->{
+                    intent= Intent(this, MainActivity::class.java)
+                    intent.putExtra("navK",4)
+                    startActivity(intent)
+                }
+            }
+            false
+        }
+        bottomNavigationView.labelVisibilityMode= LabelVisibilityMode.LABEL_VISIBILITY_LABELED
+        bottomNavigationView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
+
+    }
 }

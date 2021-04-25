@@ -19,6 +19,8 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import com.google.android.gms.location.*
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.bottomnavigation.LabelVisibilityMode
 import com.ostah_app.R
 import com.ostah_app.data.remote.apiServices.ApiClient
 import com.ostah_app.data.remote.apiServices.SessionManager
@@ -35,6 +37,8 @@ import kotlinx.android.synthetic.main.fragment_profile.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.*
 
 class CreateOrderActivity : BaseActivity() {
@@ -50,6 +54,7 @@ class CreateOrderActivity : BaseActivity() {
     var isNow:Int=0
     var lat=""
     var lng=""
+    var ostaService=""
     //date
 
     lateinit var dpd: DatePickerDialog
@@ -75,6 +80,7 @@ class CreateOrderActivity : BaseActivity() {
         onSendClicked()
         pickDate()
         onNowChecked()
+        initBottomNavigation()
 
     }
     public override fun onStart() {
@@ -143,6 +149,8 @@ class CreateOrderActivity : BaseActivity() {
         }
     }
     private fun getIntentValues(){
+        ostaService =intent.getStringExtra("service")!!
+
         ostah_name=intent.getStringExtra("ostah_name")!!
         ostah_img=intent.getStringExtra("ostah_img")!!
         ostah_id=intent.getIntExtra("ostah_id",0)
@@ -151,7 +159,8 @@ class CreateOrderActivity : BaseActivity() {
     }
     private fun setOstahData(){
         GlideObject.GlideProfilePic(this, ostah_img,user_img)
-        ostah_name_txt.text=ostah_name
+        osata_name.text=ostah_name
+        osata_department.text=ostaService
 
     }
     private fun initLocation(){
@@ -233,8 +242,10 @@ class CreateOrderActivity : BaseActivity() {
     ) {
         Toast.makeText(this, mainTextStringId, Toast.LENGTH_LONG).show()
     }
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun creatNewOrder(){
         onObserveStart()
+        if(isNow==1){date=getCurrnetDate()}
         apiClient = ApiClient()
         sessionManager = SessionManager(this)
         apiClient.getApiService(this).createOrder(ostah_id,decription,title,date,isNow,lat.toString(),lng.toString())
@@ -252,7 +263,7 @@ class CreateOrderActivity : BaseActivity() {
                             response.body()!!.data!!.let {
                                 if (it!=null) {
                                     onObserveSuccess()
-                                    Toast.makeText(this@CreateOrderActivity, "success", Toast.LENGTH_SHORT).show()
+                                    Toast.makeText(this@CreateOrderActivity, "تم إرسال طلبك بنجاح", Toast.LENGTH_SHORT).show()
 
                                     val intent= Intent(this@CreateOrderActivity, MainActivity::class.java)
                                     intent.putExtra("navK",1.toInt())
@@ -260,9 +271,7 @@ class CreateOrderActivity : BaseActivity() {
                                 } else {
                                     onObservefaled()
                                     Toast.makeText(this@CreateOrderActivity, "faid", Toast.LENGTH_SHORT).show()
-
                                 }
-
                             }
                         } else {
                             onObservefaled()
@@ -308,6 +317,7 @@ class CreateOrderActivity : BaseActivity() {
             it.visibility= View.VISIBLE
         }
     }
+    @RequiresApi(Build.VERSION_CODES.O)
     fun alertNetwork(isExit: Boolean = true) {
         val alertBuilder = AlertDialog.Builder(this)
         //alertBuilder.setTitle(R.string.error)
@@ -332,7 +342,7 @@ class CreateOrderActivity : BaseActivity() {
             order_title_header.setTextColor(getColor(R.color.red))
             Toast.makeText(this, "أدخل جميع البيانات", Toast.LENGTH_SHORT).show()
         }
-        if(date_txt.text.isNotEmpty()){
+        if(date_txt.text.isNotEmpty()||isNow==1){
             date=date_txt.text.toString()
             date_header.setTextColor(getColor(R.color.gray))
 
@@ -347,8 +357,20 @@ class CreateOrderActivity : BaseActivity() {
             description_header.setTextColor(getColor(R.color.red))
             Toast.makeText(this, "أدخل جميع البيانات", Toast.LENGTH_SHORT).show()}
 
-        if(title.isNotEmpty()&&decription.isNotEmpty()&&date.isNotEmpty()){
-            creatNewOrder()
+        if(title.isNotEmpty()&&decription.isNotEmpty()){
+            if(isNow==1){
+                date=getCurrnetDate()
+                creatNewOrder()
+
+            }else{
+                if(date.isEmpty()){
+                    Toast.makeText(this, "أدخل جميع البيانات", Toast.LENGTH_SHORT).show()
+
+                }else{
+                    creatNewOrder()
+                }
+            }
+
         }
     }
     private fun pickDate(){
@@ -396,4 +418,49 @@ class CreateOrderActivity : BaseActivity() {
         }
 
     }
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun getCurrnetDate():String{
+        val currentDateTime= LocalDateTime.now()
+        return currentDateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")).toString()
+
+    }
+    @RequiresApi(Build.VERSION_CODES.M)
+    private fun initBottomNavigation(){
+
+        val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.navigation_home -> {
+                    intent= Intent(this, MainActivity::class.java)
+                    intent.putExtra("navK",0)
+                    startActivity(intent)
+                }
+                R.id.navigation_orders -> {
+                    intent= Intent(this, MainActivity::class.java)
+                    intent.putExtra("navK",1)
+                    startActivity(intent)
+                }
+                R.id.navigation_previous -> {
+                    intent= Intent(this, MainActivity::class.java)
+                    intent.putExtra("navK",2)
+                    startActivity(intent)
+                }
+                R.id.navigation_profile->{
+                    intent= Intent(this, MainActivity::class.java)
+                    intent.putExtra("navK",3)
+                    startActivity(intent)
+                }
+                R.id.navigation_extras->{
+                    intent= Intent(this, MainActivity::class.java)
+                    intent.putExtra("navK",4)
+                    startActivity(intent)
+                }
+            }
+            false
+        }
+
+        bottomNavigationView.labelVisibilityMode= LabelVisibilityMode.LABEL_VISIBILITY_LABELED
+        bottomNavigationView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
+
+    }
+
 }

@@ -61,11 +61,12 @@ interface ApiService {
     fun cancelOrder(@Url url: String): Call<BaseResponseModel<singleTicket>>
 
     @POST
+    @FormUrlEncoded
     fun doneOrder(
         @Url url: String,
-        @Query("price") price: String,
-        @Query("rate") rate: String,
-        @Query("comment") comment: String
+        @Field("price") price: String,
+        @Field("rate") rate: String,
+        @Field("comment") comment: String
     ): Call<BaseResponseModel<singleTicket>>
 
     @GET(Q.USER_SLIDERS)
@@ -186,10 +187,11 @@ interface ApiService {
     ): Call<BaseResponseModel<Any>>
 
     @POST
+    @FormUrlEncoded
     fun updateOrder(
         @Url url: String,
-        @Query("status_id") status_id: Int,
-        @Query("price") price: String
+        @Field("status_id") status_id: Int,
+        @Field("price") price: String
     ): Call<BaseResponseModel<singleTicket>>
     @POST(Q.UPDATE_OSTAH_PHONE)
     @FormUrlEncoded

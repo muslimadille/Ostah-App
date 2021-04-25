@@ -13,6 +13,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.EditText
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.google.android.gms.common.ConnectionResult
@@ -29,9 +30,14 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.bottomnavigation.LabelVisibilityMode
 import com.ostah_app.R
+import com.ostah_app.views.user.home.MainActivity
 import com.ostah_app.views.user.home.home.orders.ostahs_list.OstahsListActivity
+import kotlinx.android.synthetic.main.activity_create_order.*
 import kotlinx.android.synthetic.main.activity_maps.*
+import kotlinx.android.synthetic.main.activity_maps.bottomNavigationView
 import java.io.IOException
 import java.util.*
 
@@ -56,6 +62,7 @@ class MapsActivity : BaseActivity(), OnMapReadyCallback, LocationListener,
     var servicesImg=""
     var key=0
 
+    @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_maps)
@@ -64,6 +71,7 @@ class MapsActivity : BaseActivity(), OnMapReadyCallback, LocationListener,
         fusedLocationProviderClient=LocationServices.getFusedLocationProviderClient(this)
         fetchLocation()
         onSearchClicked()
+        initBottomNavigation()
         servceId=intent.getIntExtra("service_id",0)
         key=intent.getIntExtra("key",0)
         if(key!=0){
@@ -242,7 +250,7 @@ class MapsActivity : BaseActivity(), OnMapReadyCallback, LocationListener,
             Toast.makeText(this, "الرجاء قم بتفعيل خاصية تحديد الموقع", Toast.LENGTH_SHORT).show()
         }else{
             mMap?.animateCamera(CameraUpdateFactory.newLatLng(lat_long))
-            mMap?.animateCamera(CameraUpdateFactory.newLatLngZoom(lat_long,11f))
+            mMap?.animateCamera(CameraUpdateFactory.newLatLngZoom(lat_long,15f))
             mCurrLocationMarker=mMap?.addMarker(markerOption)
             mCurrLocationMarker?.showInfoWindow()
             //edit_location_txt.text=getAddress(lat_long.latitude,lat_long.longitude).toString()
@@ -296,6 +304,43 @@ class MapsActivity : BaseActivity(), OnMapReadyCallback, LocationListener,
             finish()
 
         }
+
+    }
+    @RequiresApi(Build.VERSION_CODES.M)
+    private fun initBottomNavigation(){
+
+        val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.navigation_home -> {
+                    intent= Intent(this, MainActivity::class.java)
+                    intent.putExtra("navK",0)
+                    startActivity(intent)
+                }
+                R.id.navigation_orders -> {
+                    intent= Intent(this, MainActivity::class.java)
+                    intent.putExtra("navK",1)
+                    startActivity(intent)
+                }
+                R.id.navigation_previous -> {
+                    intent= Intent(this, MainActivity::class.java)
+                    intent.putExtra("navK",2)
+                    startActivity(intent)
+                }
+                R.id.navigation_profile->{
+                    intent= Intent(this, MainActivity::class.java)
+                    intent.putExtra("navK",3)
+                    startActivity(intent)
+                }
+                R.id.navigation_extras->{
+                    intent= Intent(this, MainActivity::class.java)
+                    intent.putExtra("navK",4)
+                    startActivity(intent)
+                }
+            }
+            false
+        }
+        bottomNavigationView.labelVisibilityMode= LabelVisibilityMode.LABEL_VISIBILITY_LABELED
+        bottomNavigationView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
 
     }
 

@@ -94,9 +94,9 @@
                     android:gravity="center">
                     <Button
                         android:id="@+id/edit_order_btn"
-                        android:layout_width="80dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="40dp"
-                        android:text="@string/edit"
+                        android:text="حالة الطلب"
                         android:textColor="@color/base"
                         android:backgroundTint="@color/white"/>
                 </LinearLayout>

@@ -16,6 +16,8 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.bottomnavigation.LabelVisibilityMode
 import com.gun0912.tedpermission.PermissionListener
 import com.gun0912.tedpermission.TedPermission
 import com.ostah_app.R
@@ -23,12 +25,15 @@ import com.ostah_app.data.remote.apiServices.ApiClient
 import com.ostah_app.data.remote.apiServices.SessionManager
 import com.ostah_app.data.remote.objects.*
 import com.ostah_app.views.user.base.GlideObject
+import com.ostah_app.views.user.home.MainActivity
 import com.ostah_app.views.user.home.home.orders.ostahs_list.new_order.MapsActivity
 import com.ostah_app.views.user.login.SmsVerificationActivity
 import com.theartofdev.edmodo.cropper.CropImage
 import com.theartofdev.edmodo.cropper.CropImageView
+import kotlinx.android.synthetic.main.activity_create_order.*
 import kotlinx.android.synthetic.main.activity_osta_profile_details.*
 import kotlinx.android.synthetic.main.activity_osta_profile_details.address_name_txt
+import kotlinx.android.synthetic.main.activity_osta_profile_details.bottomNavigationView
 import kotlinx.android.synthetic.main.activity_osta_profile_details.conf_password
 import kotlinx.android.synthetic.main.activity_osta_profile_details.edit_profile_cb
 import kotlinx.android.synthetic.main.activity_osta_profile_details.email
@@ -80,6 +85,7 @@ class OstaProfileDetailsActivity : BaseActivity() {
         implementListeners()
         onSaveClicked()
         onSelectLocatinoClicked()
+        initBottomNavigation()
     }
     private fun servicesObserver() {
         onObserveStart()
@@ -512,6 +518,42 @@ class OstaProfileDetailsActivity : BaseActivity() {
 
     }
     // This method is called when the second activity finishes
+    @RequiresApi(Build.VERSION_CODES.M)
+    private fun initBottomNavigation(){
 
+        val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.navigation_home -> {
+                    intent= Intent(this, MainActivity::class.java)
+                    intent.putExtra("navK",0)
+                    startActivity(intent)
+                }
+                R.id.navigation_orders -> {
+                    intent= Intent(this, MainActivity::class.java)
+                    intent.putExtra("navK",1)
+                    startActivity(intent)
+                }
+                R.id.navigation_previous -> {
+                    intent= Intent(this, MainActivity::class.java)
+                    intent.putExtra("navK",2)
+                    startActivity(intent)
+                }
+                R.id.navigation_profile->{
+                    intent= Intent(this, MainActivity::class.java)
+                    intent.putExtra("navK",3)
+                    startActivity(intent)
+                }
+                R.id.navigation_extras->{
+                    intent= Intent(this, MainActivity::class.java)
+                    intent.putExtra("navK",4)
+                    startActivity(intent)
+                }
+            }
+            false
+        }
+        bottomNavigationView.labelVisibilityMode= LabelVisibilityMode.LABEL_VISIBILITY_LABELED
+        bottomNavigationView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
+
+    }
 
 }

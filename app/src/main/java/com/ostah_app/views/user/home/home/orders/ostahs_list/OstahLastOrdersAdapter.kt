@@ -14,7 +14,6 @@ import com.ostah_app.data.remote.objects.UserResposeModel
 import com.ostah_app.utiles.Q
 import com.ostah_app.views.user.base.GlideObject
 import com.ostah_app.views.user.home.MainActivity
-import com.ostah_app.views.user.home.home.orders.ostahs_list.new_order.CreateOrderActivity
 import com.ostah_app.views.user.home.orders.OrderStateActivity
 import com.ostah_app.views.user.home.orders.OstaRecievOrderActivity
 import kotlinx.android.synthetic.main.user_order_list_item.view.*
@@ -65,9 +64,18 @@ class OstahLastOrdersAdapter(
                 mContext.startActivity(intent)
             }
             holder.show_order_btn.setOnClickListener {
-                val intent = Intent(mContext, OrderStateActivity::class.java)
+                /*val intent = Intent(mContext, OrderStateActivity::class.java)
+                intent.putExtra("status", order.status_id.toInt())
+                intent.putExtra("id", order.id.toInt())*/
+                val intent = Intent(mContext, OstaRecievOrderActivity::class.java)
                 intent.putExtra("status", order.status_id.toInt())
                 intent.putExtra("id", order.id.toInt())
+                intent.putExtra("details", order.details)
+                intent.putExtra("comment", order.title)
+                intent.putExtra("image", order.user.image)
+                intent.putExtra("name", order.user.name)
+                intent.putExtra("lat",order.lat.toString())
+                intent.putExtra("lng",order.lng.toString())
                 mContext.startActivity(intent)
             }
         }

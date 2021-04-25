@@ -38,12 +38,15 @@ class OstahsListAdapter(
         val ostah = list[position]
         holder.order_osta_name.text=ostah.name
         holder.rating_rate.rating=ostah.rating.toFloat()
+        holder.department_txt.text=ostah.service.name
+        holder.distance_txt.text=ostah.distance_user_osta.toInt().toString()+" كم"
         GlideObject.GlideProfilePic(mContext, ostah.image,holder.order_user_img)
         holder.order_btn.setOnClickListener {
             if(mContext!!.preferences!!.getString(Q.USER_NAME,"").isNotEmpty()){
                 val intent= Intent(mContext, CreateOrderActivity::class.java)
                 intent.putExtra("ostah_name",ostah.name)
                 intent.putExtra("ostah_img",ostah.image)
+                intent.putExtra("service",ostah.service.name)
                 intent.putExtra("ostah_id",ostah.id.toInt())
                 intent.putExtra("lat",mContext.lat)
                 intent.putExtra("lng",mContext.lng)
@@ -62,6 +65,11 @@ class OstahsListAdapter(
         val order_osta_name: TextView =view.order_osta_name
         val rating_rate: RatingBar =view.rating_rate
         val order_btn: Button =view.order_btn
+        val department_txt: TextView =view.department_txt
+        val distance_txt: TextView =view.distance_txt
+
+
+
 
 
 
