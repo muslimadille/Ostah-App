@@ -79,7 +79,7 @@ interface ApiService {
     fun getPrivacyInfo(): Call<BaseResponseModel<AboutUsModel>>
 
     @GET(Q.CONTACT_US)
-    fun getPhoneInfo(): Call<BaseResponseModel<AboutUsModel>>
+    fun getPhoneInfo(): Call<BaseResponseModel<ContactUs>>
 
     @POST(Q.USER_UPDATE)
     @FormUrlEncoded

@@ -100,6 +100,7 @@
                 android:layout_margin="20dp"
                 android:orientation="vertical">
                 <LinearLayout
+                    android:id="@+id/call_btn"
                     android:layout_margin="5dp"
                     android:background="@drawable/base_rounded_bg"
                     android:layout_width="match_parent"

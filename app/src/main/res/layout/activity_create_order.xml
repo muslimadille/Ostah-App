@@ -146,10 +146,11 @@
                             android:layout_margin="10dp"
                             android:id="@+id/order_title_txt"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_height="match_parent"
                             android:background="@android:color/transparent"
                             android:ems="10"
                             android:textSize="14sp"
+                            android:gravity="clip_horizontal"
                             android:hint="@string/fixing_ex_hint"
                             android:inputType="text" />
 
@@ -233,9 +234,9 @@
                         <EditText
                             android:id="@+id/description_txt"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_height="match_parent"
                             android:layout_margin="10dp"
-                            android:gravity="top"
+                            android:gravity="clip_horizontal"
                             android:textSize="14sp"
                             android:background="@android:color/transparent"
                             android:hint="أحتاج تبديل شاشة أيفون 7 بالكامل"
@@ -298,8 +299,19 @@
                     android:src="@drawable/ic_send"/>
 
             </LinearLayout>
+
+
         </androidx.cardview.widget.CardView>
     </LinearLayout>
+    <TextView
+        android:id="@+id/contactus_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/base"
+        android:text="اتصل بنا"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:layout_marginBottom="20dp"/>
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigationView"
         app:labelVisibilityMode="unlabeled"

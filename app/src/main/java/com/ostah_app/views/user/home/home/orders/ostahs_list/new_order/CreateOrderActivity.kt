@@ -28,11 +28,23 @@ import com.ostah_app.data.remote.objects.BaseResponseModel
 import com.ostah_app.data.remote.objects.OrderTecket
 import com.ostah_app.views.user.base.GlideObject
 import com.ostah_app.views.user.home.MainActivity
+import com.ostah_app.views.user.home.more.ContactUsActivity
 import kotlinx.android.synthetic.main.activity_create_order.*
+import kotlinx.android.synthetic.main.activity_create_order.bottomNavigationView
+import kotlinx.android.synthetic.main.activity_create_order.contactus_btn
+import kotlinx.android.synthetic.main.activity_create_order.date_header
+import kotlinx.android.synthetic.main.activity_create_order.date_picker_btn
+import kotlinx.android.synthetic.main.activity_create_order.date_txt
+import kotlinx.android.synthetic.main.activity_create_order.description_header
+import kotlinx.android.synthetic.main.activity_create_order.description_txt
+import kotlinx.android.synthetic.main.activity_create_order.isNow_cb
+import kotlinx.android.synthetic.main.activity_create_order.order_title_header
+import kotlinx.android.synthetic.main.activity_create_order.order_title_txt
 import kotlinx.android.synthetic.main.activity_create_order.profile_lay
 import kotlinx.android.synthetic.main.activity_create_order.progrss_lay
 import kotlinx.android.synthetic.main.activity_create_order.save_btn_lay
 import kotlinx.android.synthetic.main.activity_create_order.user_img
+import kotlinx.android.synthetic.main.activity_direct_order.*
 import kotlinx.android.synthetic.main.fragment_profile.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -81,7 +93,17 @@ class CreateOrderActivity : BaseActivity() {
         pickDate()
         onNowChecked()
         initBottomNavigation()
+        onContatUs()
 
+    }
+    private fun onContatUs(){
+        contactus_btn.setOnClickListener {
+            contactUs()
+        }
+    }
+    private fun contactUs() {
+        val intent=Intent(this@CreateOrderActivity, ContactUsActivity::class.java)
+        startActivity(intent)
     }
     public override fun onStart() {
         super.onStart()

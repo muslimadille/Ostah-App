@@ -58,17 +58,45 @@
                 android:orientation="horizontal"
                 android:gravity="center">
                 <LinearLayout
+                    android:id="@+id/phone1_btn"
                     android:layout_margin="20dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
-                    <ImageView
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        app:civ_border_color="@color/base"
+                        app:civ_border_width="5dp"
                         android:layout_margin="10dp"
-                        android:id="@+id/phone_btn"
+                        app:civ_circle_background_color="@color/base"
+                        android:id="@+id/phone1_img"
                         android:layout_width="40dp"
                         android:layout_height="60dp"
                         android:src="@drawable/ic_phone"/>
                     <TextView
+                        android:id="@+id/phone1_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="إتصال"
+                        android:gravity="center"
+                        android:textStyle="bold"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/phone2_btn"
+                    android:layout_margin="20dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        app:civ_border_color="@color/base"
+                        app:civ_border_width="5dp"
+                        app:civ_circle_background_color="@color/base"
+                        android:layout_margin="10dp"
+                        android:id="@+id/phone2_img"
+                        android:layout_width="40dp"
+                        android:layout_height="60dp"
+                        android:src="@drawable/ic_phone"/>
+                    <TextView
+                        android:id="@+id/phone2_name"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="إتصال"

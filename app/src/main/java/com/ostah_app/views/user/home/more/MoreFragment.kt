@@ -116,43 +116,8 @@ class MoreFragment : Fragment() {
         }
     }
     private fun contactUs() {
-        apiClient = ApiClient()
-        sessionManager = SessionManager(mContext!!)
-        apiClient.getApiService(mContext!!).getPhoneInfo()
-            .enqueue(object : Callback<BaseResponseModel<AboutUsModel>> {
-                override fun onFailure(call: Call<BaseResponseModel<AboutUsModel>>, t: Throwable) {
-                    // alertNetwork(true)
-                    Toast.makeText(mContext, "network error", Toast.LENGTH_SHORT).show()
-                    val intent=Intent(Intent.ACTION_CALL, Uri.parse("tel:"+"${mContext!!.preferences!!.getString("app_phone","")
-                        .replace("+","").toString()}"))
-                    mContext!!.startActivity(intent)
-                }
-
-                override fun onResponse(
-                    call: Call<BaseResponseModel<AboutUsModel>>,
-                    response: Response<BaseResponseModel<AboutUsModel>>
-                ) {
-                    if (response!!.isSuccessful) {
-                        if (response.body()!!.success) {
-                            response.body()!!.data!!.let {
-                                if(it.contact_us.isNotEmpty()){
-                                    mContext!!.preferences!!.putString("app_phone",it.contact_us)
-                                    mContext!!.preferences!!.commit()
-                                    val intent=Intent(mContext!!,ContactUsActivity::class.java)
-                                    mContext!!.startActivity(intent)
-                                }
-                            }
-                        } else {
-                            Toast.makeText(mContext, "faid", Toast.LENGTH_SHORT).show()
-                        }
-
-                    } else {
-                        Toast.makeText(mContext, "connect faid", Toast.LENGTH_SHORT).show()
-
-                    }
-                }
-
-            })
+        val intent=Intent(mContext!!,ContactUsActivity::class.java)
+        mContext!!.startActivity(intent)
     }
     private fun onCallclicked(){
         call_us.setOnClickListener {

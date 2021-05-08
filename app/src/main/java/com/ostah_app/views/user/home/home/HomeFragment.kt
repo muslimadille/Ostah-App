@@ -70,8 +70,8 @@ class HomeFragment : Fragment() {
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        userCheck()
         initSlider()
+        userCheck()
         OnDirectOrderClicked()
         refresh()
         if (mContext!!.preferences!!.getString(Q.USER_NAME,"").isEmpty()){
@@ -165,7 +165,7 @@ class HomeFragment : Fragment() {
                                     if (it.services.isNotEmpty()) {
                                         servicesList.clear()
                                         servicesList.addAll(it.services)
-                                        servicesAddapter!!.notifyDataSetChanged()
+                                        servicesAddapter?.notifyDataSetChanged()
                                         onObserveSuccess()
                                         if (mContext!!.preferences!!.getString(Q.USER_NAME,"").isNotEmpty()){
                                             contact_ostah_lay?.visibility=View.VISIBLE
@@ -398,7 +398,7 @@ class HomeFragment : Fragment() {
     private fun refresh(){
         refresh_btn.setOnClickListener {
             sliderImagesObserver()
-            offersObserver()
+            getOstahOrders()
         }
     }
 }

@@ -1,7 +1,9 @@
 package com.ostah_app.views.user.home.profile
 import BaseActivity
+import android.Manifest
 import android.content.DialogInterface
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -9,6 +11,8 @@ import android.view.View
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -20,6 +24,7 @@ import com.ostah_app.data.remote.objects.BaseResponseModel
 import com.ostah_app.data.remote.objects.NormalUserModel
 import com.ostah_app.utiles.Q
 import com.ostah_app.views.user.home.MainActivity
+import kotlinx.android.synthetic.main.activity_contact_us.*
 import kotlinx.android.synthetic.main.activity_create_order.*
 import kotlinx.android.synthetic.main.activity_sender_details.*
 import kotlinx.android.synthetic.main.activity_sender_details.bottomNavigationView
@@ -36,6 +41,9 @@ class SenderDetailsActivity : BaseActivity() {
     var name=""
     var lat=""
     var lng=""
+    var callPermission=false;
+    var phoneNum=""
+
     private lateinit var sessionManager: SessionManager
     private lateinit var apiClient: ApiClient
     @RequiresApi(Build.VERSION_CODES.M)
@@ -45,10 +53,12 @@ class SenderDetailsActivity : BaseActivity() {
         id=intent.getIntExtra("tecket_id",0)
         lat=intent.getStringExtra("lat")!!
         lng=intent.getStringExtra("lng")!!
+        checkPermission()
         getUserData()
         onBackClicked()
         navToMap()
         initBottomNavigation()
+        onPhoneClicked()
     }
     private fun onBackClicked(){
         back_btn.setOnClickListener {
@@ -100,7 +110,8 @@ class SenderDetailsActivity : BaseActivity() {
     }
     private fun setUserData(userModel: NormalUserModel){
         osata_name?.setText(userModel.name)
-        phone_txt?.text=userModel.phonenumber.toString()
+        phone_txt?.text=userModel.phonenumber.replace("+964","0").toString()
+        phoneNum=userModel.phonenumber.replace("+964","0").toString()
         user_img?.let {
             Glide.with(this).applyDefaultRequestOptions(
                 RequestOptions()
@@ -153,10 +164,10 @@ class SenderDetailsActivity : BaseActivity() {
     private fun navToMap(){
 
         val zoom=10
-        var lable=name
+        var lable="hojfhv"
         val intent= Intent(Intent.ACTION_VIEW)
         map_btn.setOnClickListener {
-            intent.data= Uri.parse("geo:0,0?z=$zoom&q=$lat,$lng,$lable")
+            intent.data= Uri.parse("geo:0,0?q=$lat,$lng")
             if(intent.resolveActivity(packageManager)!=null){
                 startActivity(intent)
             }
@@ -199,4 +210,42 @@ class SenderDetailsActivity : BaseActivity() {
         bottomNavigationView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
 
     }
+    fun checkPermission() {
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.CALL_PHONE)
+            != PackageManager.PERMISSION_GRANTED) {
+
+            // Permission is not granted
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.CALL_PHONE)) {
+                // Show an explanation to the user *asynchronously* -- don't block
+                // this thread waiting for the user's response! After the user
+                // sees the explanation, try again to request the permission.
+            } else {
+                // No explanation needed, we can request the permission.
+                ActivityCompat.requestPermissions(this,
+                    arrayOf(Manifest.permission.CALL_PHONE),
+                    42)
+            }
+        } else {
+            callPermission=true
+            // Permission has already been granted
+            //callPhone()
+        }
+    }
+    private fun onPhoneClicked(){
+
+        call_btn.setOnClickListener {
+            if (callPermission){
+                val intent=Intent(Intent.ACTION_CALL, Uri.parse("tel:"+"${phoneNum}"))
+                startActivity(intent)
+            }else{
+                checkPermission()
+            }
+
+        }
+
+    }
+
 }

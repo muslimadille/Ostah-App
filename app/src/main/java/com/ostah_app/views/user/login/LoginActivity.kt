@@ -263,42 +263,7 @@ class LoginActivity : BaseActivity() {
         }
     }
     private fun contactUs() {
-        apiClient = ApiClient()
-        sessionManager = SessionManager(this)
-        apiClient.getApiService(this).getPhoneInfo()
-            .enqueue(object : Callback<BaseResponseModel<AboutUsModel>> {
-                override fun onFailure(call: Call<BaseResponseModel<AboutUsModel>>, t: Throwable) {
-                    // alertNetwork(true)
-                    Toast.makeText(this@LoginActivity, "network error", Toast.LENGTH_SHORT).show()
-                    val intent=Intent(Intent.ACTION_CALL, Uri.parse("tel:"+"${preferences!!.getString("app_phone","")
-                        .replace("+","").toString()}"))
-                    startActivity(intent)
-                }
-
-                override fun onResponse(
-                    call: Call<BaseResponseModel<AboutUsModel>>,
-                    response: Response<BaseResponseModel<AboutUsModel>>
-                ) {
-                    if (response!!.isSuccessful) {
-                        if (response.body()!!.success) {
-                            response.body()!!.data!!.let {
-                                if(it.contact_us.isNotEmpty()){
-                                    preferences!!.putString("app_phone",it.contact_us)
-                                    preferences!!.commit()
-                                    val intent=Intent(this@LoginActivity, ContactUsActivity::class.java)
-                                    startActivity(intent)
-                                }
-                            }
-                        } else {
-                            Toast.makeText(this@LoginActivity, "faid", Toast.LENGTH_SHORT).show()
-                        }
-
-                    } else {
-                        Toast.makeText(this@LoginActivity, "connect faid", Toast.LENGTH_SHORT).show()
-
-                    }
-                }
-
-            })
+        val intent=Intent(this@LoginActivity, ContactUsActivity::class.java)
+        startActivity(intent)
     }
 }

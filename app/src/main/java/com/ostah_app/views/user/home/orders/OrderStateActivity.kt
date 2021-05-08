@@ -68,7 +68,12 @@ class OrderStateActivity : BaseActivity() {
     }
     private fun onCancelClicked(){
         cancel_btn.setOnClickListener {
-            cancelOrder()
+            if(status!=4){
+                cancelOrder()
+            }else{
+                Toast.makeText(this, "الطلب تم تنفيذه بالفعل لا يمكن إلغاء الطلب", Toast.LENGTH_SHORT).show()
+            }
+
         }
     }
     private fun onShowRateClicked() {
